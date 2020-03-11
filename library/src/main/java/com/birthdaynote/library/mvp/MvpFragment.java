@@ -2,57 +2,52 @@ package com.birthdaynote.library.mvp;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.birthdaynote.library.app.BaseActivity;
+import com.birthdaynote.library.app.BaseFragment;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
-public abstract class MvpViewActivity<P extends PresenterInterface,E extends EvenInterface> extends BaseActivity implements ViewInterface<E>{
+public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInterface> extends BaseFragment implements ViewInterface<E>  {
     protected static String TAG = "";
     private P mPtr;
     private Subject<E> mEven;
     private Disposable mDisposable;
 
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         TAG = this.getClass().getName();
         super.onCreate(savedInstanceState);
         bindPtr();
     }
 
+
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         unBindPtr();
         super.onDestroy();
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
     }
 
     protected abstract P initPtr();
@@ -86,12 +81,7 @@ public abstract class MvpViewActivity<P extends PresenterInterface,E extends Eve
 
     @Override
     public void sendEven(E even) {
-        if (mEven != null) {
-            mEven.onNext(even);
-        }else {
-            //没有对应的 事件发送器 检查是否有创建ptr对象
-            Log.d(TAG,"There is no corresponding event sender to check if a ptr object has been created");
-        }
+        mEven.onNext(even);
     }
 
     protected PtrFactoryInterface getPtrFactory(){
