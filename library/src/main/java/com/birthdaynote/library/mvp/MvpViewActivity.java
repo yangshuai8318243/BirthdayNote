@@ -1,5 +1,6 @@
 package com.birthdaynote.library.mvp;
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -10,19 +11,22 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
-public abstract class MvpViewActivity<P extends PresenterInterface,E extends EvenInterface> extends BaseActivity implements ViewInterface<E>{
+public abstract class MvpViewActivity<P extends PresenterInterface, E extends EvenInterface> extends BaseActivity implements ViewInterface<E> {
     protected static String TAG = "";
     private P mPtr;
     private Subject<E> mEven;
     private Disposable mDisposable;
-
+    private BindLiveData mBindLiveData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         TAG = this.getClass().getName();
         super.onCreate(savedInstanceState);
+        mBindLiveData = new BindLiveData();
         bindPtr();
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -57,11 +61,10 @@ public abstract class MvpViewActivity<P extends PresenterInterface,E extends Eve
 
     protected abstract P initPtr();
 
-
     @Override
     public void bindPtr() {
         mPtr = initPtr();
-        if (mPtr != null){
+        if (mPtr != null) {
             getLifecycle().addObserver(mPtr);
             mEven = newSubscriber();
             mDisposable = mEven.subscribe(mPtr);
@@ -70,16 +73,27 @@ public abstract class MvpViewActivity<P extends PresenterInterface,E extends Eve
 
     @Override
     public void unBindPtr() {
-        if (mPtr != null){
+        if (mPtr != null) {
             getLifecycle().removeObserver(mPtr);
             mPtr = null;
         }
-        if (mDisposable!=null) {
+        if (mDisposable != null) {
             mDisposable.dispose();
         }
     }
 
-    protected Subject<E> newSubscriber(){
+    protected BindLiveData sendEvenBindData(E even){
+        sendEven(even);
+        return mBindLiveData;
+    }
+
+    protected class BindLiveData{
+        public void bindLiveData(String tag, Observer observer) {
+            mPtr.bindViewLiveData(MvpViewActivity.this, tag, observer);
+        }
+    }
+
+    protected Subject<E> newSubscriber() {
         PublishSubject<E> objectPublishSubject = PublishSubject.create();
         return objectPublishSubject;
     }
@@ -88,13 +102,13 @@ public abstract class MvpViewActivity<P extends PresenterInterface,E extends Eve
     public void sendEven(E even) {
         if (mEven != null) {
             mEven.onNext(even);
-        }else {
+        } else {
             //没有对应的 事件发送器 检查是否有创建ptr对象
-            Log.d(TAG,"There is no corresponding event sender to check if a ptr object has been created");
+            Log.d(TAG, "There is no corresponding event sender to check if a ptr object has been created");
         }
     }
 
-    protected PtrFactoryInterface getPtrFactory(){
+    protected PtrFactoryInterface getPtrFactory() {
         return PtrFactory.getFactory();
     }
 

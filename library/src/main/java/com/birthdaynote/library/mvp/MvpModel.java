@@ -1,7 +1,13 @@
 package com.birthdaynote.library.mvp;
 
-public abstract class MvpModel implements ModelInterface{
+import com.birthdaynote.library.data.BaseData;
+
+public abstract class MvpModel<D extends BaseData> implements ModelInterface{
+    protected static String TAG = "";
 
     public MvpModel() {
+        TAG = getClass().getName();
     }
+
+
 }

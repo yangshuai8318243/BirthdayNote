@@ -1,15 +1,21 @@
 package com.birthdaynote.module.main;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.birthdaynote.R;
-import com.birthdaynote.library.app.BaseActivity;
-import com.birthdaynote.library.mvp.MvpFragment;
-import com.birthdaynote.library.mvp.MvpViewActivity;
+import com.birthdaynote.app.BDActivity;
 import com.birthdaynote.library.mvp.PresenterInterface;
 
-public class MainActivity extends MvpViewActivity {
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+
+public class MainActivity extends BDActivity {
+
+    @Override
+    protected Unbinder binderView() {
+        return ButterKnife.bind(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

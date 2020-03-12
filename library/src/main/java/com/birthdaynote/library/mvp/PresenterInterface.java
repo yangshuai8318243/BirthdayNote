@@ -4,6 +4,7 @@ package com.birthdaynote.library.mvp;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.OnLifecycleEvent;
 
 import io.reactivex.functions.Consumer;
@@ -34,4 +35,5 @@ public interface PresenterInterface<E extends EvenInterface> extends LifecycleOb
 
     void unBindRxEven();
 
+    void bindViewLiveData(LifecycleOwner owner,String tag,Observer observer);
 }

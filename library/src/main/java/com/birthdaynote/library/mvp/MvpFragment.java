@@ -1,7 +1,9 @@
 package com.birthdaynote.library.mvp;
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.birthdaynote.library.app.BaseActivity;
 import com.birthdaynote.library.app.BaseFragment;
@@ -15,11 +17,14 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
     private P mPtr;
     private Subject<E> mEven;
     private Disposable mDisposable;
+    private BindLiveData mBindLiveData;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         TAG = this.getClass().getName();
         super.onCreate(savedInstanceState);
+        mBindLiveData = new BindLiveData();
         bindPtr();
     }
 
@@ -74,6 +79,10 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
         }
     }
 
+    protected void bindLiveData(String tag, Observer observer) {
+        mPtr.bindViewLiveData(this, tag, observer);
+    }
+
     protected Subject<E> newSubscriber(){
         PublishSubject<E> objectPublishSubject = PublishSubject.create();
         return objectPublishSubject;
@@ -82,6 +91,17 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
     @Override
     public void sendEven(E even) {
         mEven.onNext(even);
+    }
+
+    protected BindLiveData sendEvenBindData(E even){
+        sendEven(even);
+        return mBindLiveData;
+    }
+
+    protected class BindLiveData{
+        public void bindLiveData(String tag, Observer observer) {
+            mPtr.bindViewLiveData(MvpFragment.this, tag, observer);
+        }
     }
 
     protected PtrFactoryInterface getPtrFactory(){

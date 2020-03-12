@@ -1,5 +1,9 @@
 package com.birthdaynote.library.mvp;
 
+import android.util.Log;
+
+import java.lang.reflect.InvocationTargetException;
+
 public class PtrFactory implements PtrFactoryInterface {
 
     public static PtrFactory getFactory() {
@@ -7,16 +11,28 @@ public class PtrFactory implements PtrFactoryInterface {
     }
 
     @Override
-    public <P extends PresenterInterface> P newPtr(Class<P> ptr) {
+    public <P extends PresenterInterface, V extends ViewInterface> P newPtr(Class<P> ptr, V viewInterface) {
         try {
-            return (P) ptr.newInstance();
+            return (P) ptr.getConstructor(viewInterface.getClass()).newInstance(viewInterface);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            Log.e("PtrFactory",e.getMessage());
+
         } catch (InstantiationException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            Log.e("PtrFactory",e.getMessage());
+
+        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+            Log.e("PtrFactory",e.getMessage());
+
+        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+            Log.e("PtrFactory",e.getMessage());
         }
         throw new RuntimeException("please inherit PresenterInterface");
     }
+
 
     private static class BuildePtrFactory {
         private static PtrFactory sPtrFactory = new PtrFactory();

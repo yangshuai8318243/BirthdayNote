@@ -34,6 +34,11 @@ public class ContainerActivity<P extends PresenterInterface,E extends EvenInterf
         mFragment = new WeakReference<>(fragment);
     }
 
+    @Override
+    protected void bindLiveData() {
+
+    }
+
     private Fragment initFromIntent(Intent data) {
         if (data == null) {
             throw new RuntimeException(
