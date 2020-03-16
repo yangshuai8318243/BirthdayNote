@@ -1,13 +1,13 @@
 package com.birthdaynote.library.mvp;
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.birthdaynote.library.app.BaseActivity;
 import com.birthdaynote.library.app.BaseFragment;
+import com.birthdaynote.library.mvp.factory.PtrFactory;
+import com.birthdaynote.library.mvp.factory.PtrFactoryInterface;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;

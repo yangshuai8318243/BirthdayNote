@@ -2,14 +2,14 @@ package com.birthdaynote.library.mvp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import com.birthdaynote.library.R;
 
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class ContainerActivity<P extends PresenterInterface,E extends EvenInterface> extends MvpViewActivity<P,E>{
     private static final String FRAGMENT_TAG = "content_fragment_tag";
@@ -34,10 +34,6 @@ public class ContainerActivity<P extends PresenterInterface,E extends EvenInterf
         mFragment = new WeakReference<>(fragment);
     }
 
-    @Override
-    protected void bindLiveData() {
-
-    }
 
     private Fragment initFromIntent(Intent data) {
         if (data == null) {

@@ -14,7 +14,7 @@ public class MainActivity extends BDActivity {
 
     @Override
     protected Unbinder binderView() {
-        return ButterKnife.bind(this);
+        return null;
     }
 
     @Override

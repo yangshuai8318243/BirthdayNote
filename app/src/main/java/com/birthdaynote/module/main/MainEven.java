@@ -1,12 +1,12 @@
 package com.birthdaynote.module.main;
 
-import com.birthdaynote.library.data.DefultData;
+import com.birthdaynote.library.data.entity.BaseData;
 import com.birthdaynote.library.mvp.EvenInterface;
 
-public class MainEven implements EvenInterface<DefultData> {
+public class MainEven implements EvenInterface<BaseData> {
     public static final String MAIN_GET_IMAGE_DATA = "MAIN_GET_IMAGE_DATA";
     private String mTag = "";
-    private DefultData mDefultData = new DefultData();
+    private BaseData mDefultData = new BaseData.Builder().build();
 
     @Override
     public String getTag() {
@@ -20,11 +20,8 @@ public class MainEven implements EvenInterface<DefultData> {
 
 
     @Override
-    public DefultData getData() {
+    public BaseData getData() {
         return mDefultData;
     }
-
-
-
 
 }

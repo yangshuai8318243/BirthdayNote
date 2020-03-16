@@ -1,9 +1,6 @@
 package com.birthdaynote.module.main;
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +11,9 @@ import android.widget.ImageView;
 import com.birthdaynote.R;
 import com.birthdaynote.app.BDFragment;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -40,7 +40,6 @@ public class MainFragment extends BDFragment<MainPtr,MainEven> {
         sendEvenBindData(mainEven).bindLiveData(MainEven.MAIN_GET_IMAGE_DATA, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String o) {
-                Log.e(TAG,"====bindLiveData===IMAGE_LOAD_SHOW==111111=============>" + o);
             }
         });
 

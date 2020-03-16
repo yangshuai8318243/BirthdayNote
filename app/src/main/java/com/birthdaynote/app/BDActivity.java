@@ -1,12 +1,12 @@
 package com.birthdaynote.app;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import com.birthdaynote.library.mvp.EvenInterface;
 import com.birthdaynote.library.mvp.MvpViewActivity;
 import com.birthdaynote.library.mvp.PresenterInterface;
 
+import androidx.annotation.Nullable;
 import butterknife.Unbinder;
 
 public abstract class BDActivity<P extends PresenterInterface,E extends EvenInterface> extends MvpViewActivity<P,E> {
