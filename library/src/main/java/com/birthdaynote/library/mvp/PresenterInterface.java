@@ -2,6 +2,8 @@ package com.birthdaynote.library.mvp;
 
 
 
+import com.birthdaynote.library.mvp.even.EvenInterface;
+
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;

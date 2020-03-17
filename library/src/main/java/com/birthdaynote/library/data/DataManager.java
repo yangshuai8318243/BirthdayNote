@@ -3,7 +3,7 @@ package com.birthdaynote.library.data;
 import com.birthdaynote.library.data.local.LocalDataManager;
 import com.birthdaynote.library.data.net.NetworkDataManager;
 
-public class DataManager {
+class DataManager {
     private LocalDataManager mLocalDataManager;
     private NetworkDataManager mNetworkDataManager;
 

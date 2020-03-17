@@ -2,9 +2,12 @@ package com.birthdaynote.library.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.birthdaynote.library.mvp.ContainerActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,8 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 public class BaseFragment extends Fragment {
+    protected static String TAG = "";
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        TAG = this.getClass().getName();
         super.onCreate(savedInstanceState);
     }
 
@@ -70,6 +76,32 @@ public class BaseFragment extends Fragment {
         Intent intent = new Intent(getContext(), clz);
         if (bundle != null) {
             intent.putExtras(bundle);
+        }
+        startActivity(intent);
+    }
+
+    /**
+     * 跳转容器页面
+     *
+     * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
+     */
+    public void startContainerActivity(String canonicalName) {
+        startContainerActivity(canonicalName, null);
+    }
+
+    /**
+     * 跳转容器页面
+     *
+     * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
+     * @param bundle        跳转所携带的信息
+     */
+    public void startContainerActivity(String canonicalName, Bundle bundle) {
+        Intent intent = new Intent(getContext(), ContainerActivity.class);
+        Log.e(TAG, "====fragmentName=canonicalName=>" + canonicalName);
+
+        intent.putExtra(ContainerActivity.FRAGMENT, canonicalName);
+        if (bundle != null) {
+            intent.putExtra(ContainerActivity.BUNDLE, bundle);
         }
         startActivity(intent);
     }

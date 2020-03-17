@@ -13,6 +13,7 @@ import com.birthdaynote.app.BDFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -37,10 +38,8 @@ public class MainFragment extends BDFragment<MainPtr,MainEven> {
         Log.e(TAG,"----------OnClick------>");
         MainEven mainEven = new MainEven();
         mainEven.setTag(MainEven.MAIN_GET_IMAGE_DATA);
-        sendEvenBindData(mainEven).bindLiveData(MainEven.MAIN_GET_IMAGE_DATA, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String o) {
-            }
+        sendEvenBindData(mainEven)
+                .bindLiveData(MainEven.MAIN_GET_IMAGE_DATA, (Observer<String>) o -> {
         });
 
     }

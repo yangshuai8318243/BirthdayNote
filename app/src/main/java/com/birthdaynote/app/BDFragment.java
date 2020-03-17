@@ -2,7 +2,7 @@ package com.birthdaynote.app;
 
 import android.view.View;
 
-import com.birthdaynote.library.mvp.EvenInterface;
+import com.birthdaynote.library.mvp.even.EvenInterface;
 import com.birthdaynote.library.mvp.MvpFragment;
 import com.birthdaynote.library.mvp.PresenterInterface;
 

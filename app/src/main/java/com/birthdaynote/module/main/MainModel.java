@@ -12,7 +12,7 @@ public class MainModel extends MvpModel<BaseData> {
                 .mInt(233)
                 .mLong(1233L).build();
         build.getmSimpleMapData().put("xxxxx","dddddd");
-        build.getmListData().saveData("key1",new BaseData.Builder().mStr("xxxxxx1111111xxxxxxxxxx").build());
+//        build.getmListData().saveData("key1",new BaseData.Builder().mStr("xxxxxx1111111xxxxxxxxxx").build());
         return build;
     }
 

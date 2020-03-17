@@ -1,10 +1,8 @@
-package com.birthdaynote.module.main;
+package com.birthdaynote.library.mvp.even;
 
 import com.birthdaynote.library.data.entity.BaseData;
-import com.birthdaynote.library.mvp.even.EvenInterface;
 
-public class MainEven implements EvenInterface<BaseData> {
-    public static final String MAIN_GET_IMAGE_DATA = "MAIN_GET_IMAGE_DATA";
+public class DefEven implements EvenInterface<BaseData> {
     private String mTag = "";
     private BaseData mDefultData = new BaseData.Builder().build();
 
@@ -23,5 +21,4 @@ public class MainEven implements EvenInterface<BaseData> {
     public BaseData getData() {
         return mDefultData;
     }
-
 }

@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.birthdaynote.library.app.BaseActivity;
+import com.birthdaynote.library.data.entity.MvpData;
+import com.birthdaynote.library.mvp.even.EvenConstants;
+import com.birthdaynote.library.mvp.even.EvenInterface;
 import com.birthdaynote.library.mvp.factory.PtrFactory;
 import com.birthdaynote.library.mvp.factory.PtrFactoryInterface;
 
@@ -14,7 +17,6 @@ import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
 public abstract class MvpViewActivity<P extends PresenterInterface, E extends EvenInterface> extends BaseActivity implements ViewInterface<E> {
-    protected static String TAG = "";
     private P mPtr;
     private Subject<E> mEven;
     private Disposable mDisposable;
@@ -22,10 +24,30 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        TAG = this.getClass().getName();
         super.onCreate(savedInstanceState);
         mBindLiveData = new BindLiveData();
         bindPtr();
+        bindBaseEven();
+    }
+
+
+    private void bindBaseEven(){
+        mBindLiveData.bindLiveData(EvenConstants.START_ACTIVIT_PTR_TAG, new Observer<MvpData>() {
+            @Override
+            public void onChanged(MvpData baseDataList) {
+                Class className = baseDataList.getmClassName();
+                Bundle bundle = baseDataList.getmData();
+                startActivity(className,bundle);
+            }
+        });
+        mBindLiveData.bindLiveData(EvenConstants.START_CANONICAL_PTR_TAG, new Observer<MvpData>() {
+            @Override
+            public void onChanged(MvpData mvpData) {
+                String fragmentName = mvpData.getmFragmentName();
+                Bundle bundle = mvpData.getmData();
+                startContainerActivity(fragmentName, bundle);
+            }
+        });
     }
 
 
@@ -91,7 +113,9 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
 
     protected class BindLiveData{
         public void bindLiveData(String tag, Observer observer) {
-            mPtr.bindViewLiveData(MvpViewActivity.this, tag, observer);
+            if (mPtr != null) {
+                mPtr.bindViewLiveData(MvpViewActivity.this, tag, observer);
+            }
         }
     }
 

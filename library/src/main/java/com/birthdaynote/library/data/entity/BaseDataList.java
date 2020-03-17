@@ -2,6 +2,7 @@ package com.birthdaynote.library.data.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +65,8 @@ public class BaseDataList implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mDataMap.size());
+        Log.e("BaseDataList","-------mDataMap.size()--------<"+mDataMap.size());
+
         for (Map.Entry<String, BaseData> entry : this.mDataMap.entrySet()) {
             dest.writeString(entry.getKey());
             dest.writeParcelable(entry.getValue(), flags);
@@ -76,9 +79,10 @@ public class BaseDataList implements Parcelable {
     protected BaseDataList(Parcel in) {
         int mDataMapSize = in.readInt();
         this.mDataMap = new HashMap<String, BaseData>(mDataMapSize);
+        Log.e("BaseDataList","---------------<"+mDataMapSize);
         for (int i = 0; i < mDataMapSize; i++) {
             String key = in.readString();
-            BaseData value = in.readParcelable(BaseData.class.getClassLoader());
+            BaseData value = new BaseData(in);
             this.mDataMap.put(key, value);
         }
     }

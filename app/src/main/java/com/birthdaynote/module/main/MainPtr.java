@@ -4,10 +4,12 @@ package com.birthdaynote.module.main;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import com.birthdaynote.library.data.entity.BaseData;
 import com.birthdaynote.library.mvp.MvpPresenter;
+import com.birthdaynote.module.home.HomeFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,5 +45,9 @@ public class MainPtr extends MvpPresenter<MainFragment,MainEven,MainModel>{
 
         Log.e(TAG,"cccccc:"+imageData.toString());
         liveData.setValue("xxxxxxxxxxxxxxaaaaaaaaaaaaaaaaaaaaaa");
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("test",imageData);
+        startContainerActivity(HomeFragment.class.getCanonicalName(),bundle);
     }
 }
