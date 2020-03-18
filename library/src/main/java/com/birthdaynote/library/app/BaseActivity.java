@@ -21,6 +21,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * 添加Fragment
+     *
+     * @param fragmentClass
+     * @param viewId
+     * @param <F>
+     */
     protected <F extends Fragment> void addFragment(Class<F> fragmentClass, int viewId) {
         Fragment baseFragment = null;
         try {
@@ -38,6 +45,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 添加Fragment
+     *
+     * @param fragment
+     * @param viewId
+     */
     protected void addFragment(Fragment fragment, int viewId) {
         if (fragment != null) {
             FragmentTransaction trans = getSupportFragmentManager()
