@@ -1,4 +1,4 @@
-package com.example.admin.libapplication.data;
+package com.birthdaynote.library.data.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -21,13 +21,9 @@ import java.util.List;
  */
 public final class DataItemArray implements Parcelable {
     private static final int CURRENT_PARCEL_VERSION = 1; // 当前序列化格式的版本号
-    protected final List<Object> mItems = new ArrayList<Object>();
+    protected final List<Object> mItems = new ArrayList<>();
 
     public DataItemArray() {
-    }
-
-    public DataItemArray(JSONArray jsonArray) {
-        appendJSONArray(jsonArray);
     }
 
     public DataItemArray(Parcel in) {
@@ -392,13 +388,6 @@ public final class DataItemArray implements Parcelable {
         }
     }
 
-    /**
-     * 转成字符串
-     */
-    @Override
-    public String toString() {
-        return toJSONArray().toString();
-    }
 
     /**
      * 数据列表容器 反序列化第一版规则
@@ -449,49 +438,8 @@ public final class DataItemArray implements Parcelable {
         }
     }
 
-    /**
-     * 追加一个 JSONArray 数组中所有元素到数据列表容器
-     */
-    public final void appendJSONArray(JSONArray jsonArray) {
-        if (null != jsonArray) {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                Object jo = jsonArray.opt(i);
 
-                if (jo instanceof JSONObject) {
-                    mItems.add(new DataItem((JSONObject) jo));
-                } else if (jo instanceof JSONArray) {
-                    mItems.add(new DataItemArray((JSONArray) jo));
-                } else if (jo instanceof String || jo instanceof Long || jo instanceof Integer || jo instanceof Double || jo instanceof Number || jo instanceof Boolean) {
-                    mItems.add(jo);
-                }
-            }
-        }
-    }
 
-    /**
-     * 把一个数据列表容器转换为一个 JSONArray 数组
-     */
-    public final JSONArray toJSONArray() {
-        JSONArray jsonArray = new JSONArray();
-
-        try {
-            for (int i = 0; i < mItems.size(); i++) {
-                Object jo = mItems.get(i);
-
-                if (jo instanceof DataItem) {
-                    jsonArray.put(((DataItem) jo).toJSONObject());
-                } else if (jo instanceof DataItemArray) {
-                    jsonArray.put(((DataItemArray) jo).toJSONArray());
-                } else if (jo instanceof String || jo instanceof Long || jo instanceof Integer || jo instanceof Double || jo instanceof Number || jo instanceof Boolean) {
-                    jsonArray.put(jo);
-                }
-            }
-        } catch (Throwable e) {
-            Log.e("DataItemArray", e.getMessage());
-        }
-
-        return jsonArray;
-    }
 
     @Override
     public int describeContents() {

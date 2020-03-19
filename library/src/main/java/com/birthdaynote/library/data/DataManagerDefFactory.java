@@ -2,18 +2,19 @@ package com.birthdaynote.library.data;
 
 import com.birthdaynote.library.data.local.RoomLocalManager;
 import com.birthdaynote.library.data.net.OkNetManager;
+import com.birthdaynote.library.data.net.ReqestInterceptor;
+import com.birthdaynote.library.data.net.ResponseInterceptor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import okhttp3.Headers;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 
 public class DataManagerDefFactory implements DataManagerFactoryInterface<DataManager> {
     private OkHttpClient mOkHttpClient;
     private Headers mHeader;
-    private MediaType mMediaType;
+    private String mMediaType;
 
     private DataManagerDefFactory(Builder builder) {
         mOkHttpClient = builder.mOkHttpClient;
@@ -44,9 +45,12 @@ public class DataManagerDefFactory implements DataManagerFactoryInterface<DataMa
 
 
     public static final class Builder {
-        private OkHttpClient mOkHttpClient;
-        private Headers mHeader;
-        private MediaType mMediaType;
+        private OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new ReqestInterceptor())
+                .addInterceptor(new ResponseInterceptor())
+                .build();
+        private Headers mHeader = new Headers.Builder().build();
+        private String mMediaType = "text/x-markdown; charset=utf-8";
 
         public Builder() {
         }
@@ -61,7 +65,7 @@ public class DataManagerDefFactory implements DataManagerFactoryInterface<DataMa
             return this;
         }
 
-        public Builder mMediaType(MediaType val) {
+        public Builder mMediaType(String val) {
             mMediaType = val;
             return this;
         }

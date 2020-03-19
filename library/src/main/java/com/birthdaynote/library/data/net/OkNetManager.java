@@ -3,61 +3,65 @@ package com.birthdaynote.library.data.net;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.FormBody;
 import okhttp3.Headers;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class OkNetManager implements NetworkDataManager {
 
     private OkHttpClient mOkHttpClient;
     private Headers mHeader;
-    private MediaType mMediaType;
+    private String mMediaType;
 
-    public OkNetManager(OkHttpClient mOkHttpClient, Headers mHeader, MediaType mMediaType) {
+    public OkNetManager(OkHttpClient mOkHttpClient, Headers mHeader, String mMediaType) {
         this.mOkHttpClient = mOkHttpClient;
         this.mHeader = mHeader;
         this.mMediaType = mMediaType;
     }
 
-    private Request buildReques(String requestUrl, String jsonStr) {
+    private Request buildReques(String requestUrl, Map<String, String> param) {
         Request.Builder builder = new Request.Builder();
-
         if (mHeader != null && mHeader.size() > 0) {
             builder.headers(mHeader);
         }
 
-        if (jsonStr != null) {
-            RequestBody requestBody = RequestBody.create(mMediaType, jsonStr);
-            builder.post(requestBody);
+        if (param != null) {
+            FormBody.Builder formBder = new FormBody.Builder();
+            for (String key : param.keySet()) {
+                formBder.add(key,param.get(key));
+            }
+            builder.post(formBder.build());
         }
 
         Request build = builder.url(requestUrl).build();
         return build;
     }
 
+
     @Override
-    public <D> D getRequest(D data, String requestUrl) {
-        return request(data, requestUrl, null);
+    public <R> R getRequest(Class<R> rClass, String requestUrl) {
+        return request(rClass,requestUrl,null);
     }
 
     @Override
-    public <D> D postRequest(D data, String requestUrl, String jsonStr) {
-        return request(data, requestUrl, jsonStr);
+    public <R> R postRequest(Class<R> rClass, String requestUrl, Map<String, String> param) {
+        return request(rClass, requestUrl, param);
     }
 
-    private <D> D request(D data, String requestUrl, String jsonStr) {
-        Request request = buildReques(requestUrl, null);
+
+    private <R> R request(Class<R> rClass, String requestUrl, Map<String, String> param) {
+        Request request = buildReques(requestUrl, param);
         Call call = mOkHttpClient.newCall(request);
 
         try {
             Response execute = call.execute();
             String string = execute.body().string();
-            D fromJson = new Gson().<D>fromJson(string, data.getClass());
+            R fromJson = new Gson().<R>fromJson(string, rClass);
             return fromJson;
         } catch (IOException e) {
             e.printStackTrace();

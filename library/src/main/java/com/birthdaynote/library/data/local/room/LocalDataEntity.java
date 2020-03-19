@@ -5,13 +5,13 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "local_data",indices = {@Index("name")})
+@Entity(tableName = "local_data",indices = {@Index("uid")})
 public class LocalDataEntity {
     @PrimaryKey(autoGenerate = true)
     public int uid;
 
-    @ColumnInfo(name = "url")
-    public String url;
+    @ColumnInfo(name = "key")
+    public String key;
 
     @ColumnInfo(name = "type")
     public String type;

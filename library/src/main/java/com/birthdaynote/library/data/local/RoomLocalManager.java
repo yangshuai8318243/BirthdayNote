@@ -13,14 +13,15 @@ public class RoomLocalManager implements LocalDataManager{
     }
 
     @Override
-    public <D> D getData(String url) {
+    public <D> D getData(String ket, String type) {
         return null;
     }
 
     @Override
-    public <D> void saveData(String url, D data) {
+    public <D> void saveData(String url, String type, D data) {
 
     }
+
 
     private static class BuildSingletonLocalDatabase {
         private static final AppLocalDatabase s_AppLocalDatabase = Room.databaseBuilder(BaseApp.getInstance(),AppLocalDatabase.class,"local_data").build();

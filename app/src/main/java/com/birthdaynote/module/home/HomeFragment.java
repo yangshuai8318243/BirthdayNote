@@ -1,14 +1,12 @@
 package com.birthdaynote.module.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.birthdaynote.R;
 import com.birthdaynote.app.BDFragment;
-import com.birthdaynote.library.data.entity.BaseData;
 import com.birthdaynote.library.mvp.even.DefEven;
 
 import androidx.annotation.NonNull;

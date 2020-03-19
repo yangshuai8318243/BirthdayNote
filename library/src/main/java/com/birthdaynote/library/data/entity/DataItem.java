@@ -1,14 +1,10 @@
-package com.example.admin.libapplication.data;
+package com.birthdaynote.library.data.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
@@ -25,10 +21,6 @@ public final class DataItem implements Parcelable {
     private final LinkedHashMap<String, Object> mNameValuePairs = new LinkedHashMap<String, Object>();
 
     public DataItem() {
-    }
-
-    public DataItem(JSONObject jsonObject) {
-        appendJSONObject(jsonObject);
     }
 
     public DataItem(Parcel in) {
@@ -543,13 +535,7 @@ public final class DataItem implements Parcelable {
         }
     }
 
-    /**
-     * 转成字符串
-     */
-    @Override
-    public String toString() {
-        return toJSONObject().toString();
-    }
+
 
     /**
      * 单条数据容器 反序列化第一版规则
@@ -623,17 +609,7 @@ public final class DataItem implements Parcelable {
         return data;
     }
 
-    /**
-     * 把一个String类型的JSONObject转换为 DataItem 对象
-     *
-     * @param jsonString
-     * @return DataItem
-     */
-    public static DataItem fromJSONString(String jsonString) {
-        DataItem item = new DataItem();
-        item.appendJSONString(jsonString);
-        return item;
-    }
+
 
     /**
      * 把字节数据转换为 DataItem 对象
@@ -660,67 +636,6 @@ public final class DataItem implements Parcelable {
         return new DataItem();
     }
 
-    /**
-     * 往单条数据容器中追加一个 String 类型的 JSONObject 对象所有的键值对
-     */
-    public final void appendJSONString(String jsonString) {
-        if (TextUtils.isEmpty(jsonString)) {
-            return;
-        }
-
-        try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            appendJSONObject(jsonObject);
-        } catch (Throwable e) {
-            Log.e("DataItem", e.getMessage());
-        }
-    }
-
-    /**
-     * 往单条数据容器中追加一个 JSONObject 对象所有的键值对
-     */
-    public final void appendJSONObject(JSONObject jsonObject) {
-        if (null != jsonObject) {
-            for (Iterator iter = jsonObject.keys(); iter.hasNext(); ) {
-                String key = (String) iter.next();
-                Object jo = jsonObject.opt(key);
-
-                if (jo instanceof JSONObject) {
-                    mNameValuePairs.put(key, new DataItem((JSONObject) jo));
-                } else if (jo instanceof JSONArray) {
-                    mNameValuePairs.put(key, new DataItemArray((JSONArray) jo));
-                } else if (jo instanceof String || jo instanceof Long || jo instanceof Integer || jo instanceof Double || jo instanceof Number || jo instanceof Boolean) {
-                    mNameValuePairs.put(key, jo);
-                }
-            }
-        }
-    }
-
-
-    /**
-     * 把一个单条数据容器转换成一个 JSONObject 对象
-     */
-    public final JSONObject toJSONObject() {
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-            for (String key : mNameValuePairs.keySet()) {
-                Object jo = mNameValuePairs.get(key);
-
-                if (jo instanceof DataItem) {
-                    jsonObject.put(key, ((DataItem) jo).toJSONObject());
-                } else if (jo instanceof DataItemArray) {
-                    jsonObject.put(key, ((DataItemArray) jo).toJSONArray());
-                } else if (jo instanceof String || jo instanceof Long || jo instanceof Integer || jo instanceof Double || jo instanceof Number || jo instanceof Boolean) {
-                    jsonObject.put(key, jo);
-                }
-            }
-        } catch (Throwable e) {
-            Log.e("DataItem", e.getMessage());
-        }
-
-        return jsonObject;
-    }
 
     @Override
     public int describeContents() {

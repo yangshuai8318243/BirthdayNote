@@ -1,11 +1,9 @@
-package com.example.admin.libapplication.data;
+package com.birthdaynote.library.data.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
-
-import org.json.JSONObject;
 
 /**
  * 接口数据解析结果容器
@@ -25,10 +23,6 @@ public class DataResult implements Parcelable {
     private String debuginfo = ""; // 调试时，记录调试信息的字符串，开始时有用，此项数据不会序列化或反序列化
 
     public DataResult() {
-    }
-
-    public DataResult(JSONObject jsonObject) {
-        appendJSONObject(jsonObject);
     }
 
     public DataResult(Parcel in) {
@@ -684,14 +678,6 @@ public class DataResult implements Parcelable {
     }
 
     /**
-     * 转成字符串
-     */
-    @Override
-    public String toString() {
-        return toJSONObject().toString();
-    }
-
-    /**
      * 把对象数据转为字节数组
      *
      * @return byte[]
@@ -738,71 +724,8 @@ public class DataResult implements Parcelable {
         return new DataResult();
     }
 
-    /**
-     * 往接口数据解析结果容器中追加一个 JSONObject 对象所有的匹配节点
-     */
-    public final void appendJSONObject(JSONObject jsonObject) {
-        if (null != jsonObject) {
-            if (jsonObject.has("result")) {
-                hasError = !jsonObject.optBoolean("result");
-            }
 
-            if (jsonObject.has("hasError")) {
-                hasError = jsonObject.optBoolean("hasError");
-            }
 
-            if (jsonObject.has("localError")) {
-                localError = jsonObject.optBoolean("localError");
-            }
-
-            if (jsonObject.has("status")) {
-                statusCode = jsonObject.optInt("status");
-            }
-
-            if (jsonObject.has("totalcount")) {
-                totalCount = jsonObject.optInt("totalcount");
-            }
-
-            if (jsonObject.has("message")) {
-                message = jsonObject.optString("message");
-            }
-
-            if (jsonObject.has("debuginfo")) {
-                debuginfo = jsonObject.optString("debuginfo");
-            }
-
-            if (jsonObject.has("detailinfo")) {
-                detailinfo.appendJSONObject(jsonObject.optJSONObject("detailinfo"));
-            }
-
-            if (jsonObject.has("items")) {
-                items.appendJSONArray(jsonObject.optJSONArray("items"));
-            }
-        }
-    }
-
-    /**
-     * 把一个接口数据解析结果容器转换成一个 JSONObject 对象
-     */
-    public final JSONObject toJSONObject() {
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-            jsonObject.put("result", !hasError);
-            jsonObject.put("hasError", hasError);
-            jsonObject.put("localError", localError);
-            jsonObject.put("status", statusCode);
-            jsonObject.put("totalcount", totalCount);
-            jsonObject.put("message", message);
-            jsonObject.put("debuginfo", debuginfo);
-            jsonObject.put("detailinfo", detailinfo.toJSONObject());
-            jsonObject.put("items", items.toJSONArray());
-        } catch (Throwable e) {
-            Log.e("DataResult", e.getMessage());
-        }
-
-        return jsonObject;
-    }
 
     @Override
     public int describeContents() {

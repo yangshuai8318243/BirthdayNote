@@ -10,10 +10,10 @@ import androidx.room.Query;
 @Dao
 public interface LocalDao {
 
-    @Query("SELECT * FROM local_data WHERE url IN (:url)")
-    List<LocalDataEntity> getUrlAll(String url);
+    @Query("SELECT * FROM local_data WHERE `key` IN (:key)")
+    List<LocalDataEntity> getUrlAll(String key);
 
-    @Query("SELECT * FROM local_data WHERE type IN (:type)")
+    @Query("SELECT * FROM local_data WHERE 'type' IN (:type)")
     List<LocalDataEntity> getLocalDataFromType(String type);
 
     @Insert
