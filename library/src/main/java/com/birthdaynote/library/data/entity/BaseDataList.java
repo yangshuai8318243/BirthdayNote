@@ -4,41 +4,36 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseDataList implements Parcelable {
-    private Map<String, BaseData> mDataMap = new HashMap<>();
+    private static final String TAG = "BaseDataList";
+    private static final int CURRENT_PARCEL_VERSION = 1; // 当前序列化格式的版本号
+    private List<BaseData> mDataList = new ArrayList<>();
 
 
-    public BaseData getData(String key) {
-        if (isKeyNull(key)) {
-            return null;
-        }
-
-        BaseData baseData = mDataMap.get(key);
+    public BaseData getData(int key) {
+        BaseData baseData = mDataList.get(key);
         return baseData;
     }
 
+    public boolean saveData(BaseData baseData) {
+        return saveData(-1, baseData);
+    }
 
-    public boolean saveData(String key, BaseData baseData) {
-        if (isDataNull(baseData) || isKeyNull(key)) {
+
+    public boolean saveData(int position, BaseData baseData) {
+        if (isDataNull(baseData)) {
             return false;
         }
 
-        BaseData put = mDataMap.put(key, baseData);
-
-        if (put != null) {
+        if (position < 0 || position >= mDataList.size()) {
+            return mDataList.add(baseData);
+        } else {
+            mDataList.add(position, baseData);
             return true;
         }
-        return false;
-    }
-
-    private boolean isKeyNull(String key) {
-        if (key == null || key == "") {
-            return true;
-        }
-        return false;
     }
 
 
@@ -50,10 +45,9 @@ public class BaseDataList implements Parcelable {
     }
 
 
-    @Override
-    public String toString() {
+    public String print() {
         return "BaseDataList{" +
-                "mDataMap=" + mDataMap +
+                "mDataMap=" + mDataList +
                 '}';
     }
 
@@ -64,26 +58,55 @@ public class BaseDataList implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mDataMap.size());
-        Log.e("BaseDataList","-------mDataMap.size()--------<"+mDataMap.size());
+        // 序列化对象的格式版本号
+        dest.writeInt(CURRENT_PARCEL_VERSION);
 
-        for (Map.Entry<String, BaseData> entry : this.mDataMap.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeParcelable(entry.getValue(), flags);
+        // 写入序列化对象的键值对个数
+        dest.writeInt(mDataList.size());
+
+        for (BaseData baseData : mDataList) {
+            baseData.writeToParcel(dest, flags);
         }
+
     }
 
     public BaseDataList() {
     }
 
     protected BaseDataList(Parcel in) {
-        int mDataMapSize = in.readInt();
-        this.mDataMap = new HashMap<String, BaseData>(mDataMapSize);
-        Log.e("BaseDataList","---------------<"+mDataMapSize);
-        for (int i = 0; i < mDataMapSize; i++) {
-            String key = in.readString();
-            BaseData value = new BaseData(in);
-            this.mDataMap.put(key, value);
+        fromParcel(in);
+    }
+
+    /**
+     * 数据列表容器 从一个Parcel容器中反序列化
+     */
+    public final boolean fromParcel(Parcel in) {
+        try {
+            int parcelVersion = in.readInt();
+            Log.e(TAG, "--parcelVersion--->" + parcelVersion);
+            if (parcelVersion == 1) { // 目前只支持第一版
+                fromParcelV1(in);
+            } else {
+                throw new Exception("BaseDataList.fromParcel(in): unkown parcel version: " + parcelVersion);
+            }
+
+            return true;
+        } catch (Throwable e) {
+            Log.e("BaseDataList", e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 数据列表容器 反序列化第一版规则
+     */
+    private void fromParcelV1(Parcel in) throws Throwable {
+        int itemCount = in.readInt();
+        Log.e(TAG, "--itemCount--->" + itemCount);
+
+        for (int i = 0; i < itemCount; i++) {
+            BaseData baseData = new BaseData(in);
+            mDataList.add(baseData);
         }
     }
 

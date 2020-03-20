@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.birthdaynote.library.data.entity.BaseData;
+import com.birthdaynote.library.data.entity.BaseDataList;
+import com.birthdaynote.library.data.entity.DataItemArray;
 import com.birthdaynote.library.mvp.MvpPresenter;
 import com.birthdaynote.library.util.RxUtils;
+import com.birthdaynote.module.home.HomeFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +44,6 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
 
     @Override
     public void accept(MainEven mainEven) throws Exception {
-        Log.e(TAG, "----------accept------>");
         String tag = mainEven.getTag();
         BaseData data = mainEven.getData();
 
@@ -56,13 +58,14 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
         }.compose(RxUtils.schedulersTransformer()).doOnSubscribe(disposable -> {
 
         }).subscribe((Consumer<BaseData>) o -> {
-            Log.e(TAG, "cccccc:" + o.toString());
             liveData.setValue("xxxxxxxxxxxxxxaaaaaaaaaaaaaaaaaaaaaa");
+            BaseDataList list = mModel.getList();
             Bundle bundle = new Bundle();
-            bundle.putParcelable("test", o);
-//            startContainerActivity(HomeFragment.class.getCanonicalName(), bundle);
-        }));
+            bundle.putParcelable("test", list);
+            Log.e(TAG, "cccccc:" + list.toString());
 
+            startContainerActivity(HomeFragment.class.getCanonicalName(), bundle);
+        }));
 
 
     }

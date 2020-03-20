@@ -3,6 +3,9 @@ package com.birthdaynote.module.main;
 import android.util.Log;
 
 import com.birthdaynote.library.data.entity.BaseData;
+import com.birthdaynote.library.data.entity.BaseDataList;
+import com.birthdaynote.library.data.entity.DataItem;
+import com.birthdaynote.library.data.entity.DataItemArray;
 import com.birthdaynote.library.mvp.MvpModel;
 
 import java.io.IOException;
@@ -43,7 +46,7 @@ public class MainModel extends MvpModel<BaseData> {
         return build;
     }
 
-    private void postReq(){
+    private void postReq() {
         Request.Builder builder = new Request.Builder();
 
         builder.url("http://v.juhe.cn/toutiao/index");
@@ -64,17 +67,30 @@ public class MainModel extends MvpModel<BaseData> {
         }
     }
 
-    BaseData getPost(){
+    BaseDataList getList() {
+        BaseDataList baseDataList = new BaseDataList();
+        baseDataList.saveData(new BaseData.Builder().mStr("getList").build());
+        return baseDataList;
+    }
 
+    DataItemArray getArrList() {
+        DataItemArray dataItemArray = new DataItemArray();
+        dataItemArray.add("dataItemArrayStr");
+        DataItem dataItem = new DataItem();
+        dataItem.setBool("setBool", true);
+        dataItemArray.add(dataItem);
+        return dataItemArray;
+    }
 
-
+    BaseData getPost() {
         BaseData build = new BaseData.Builder()
                 .mBoolean(false)
                 .mStr("11111")
                 .mDouble(1.0)
                 .mInt(233)
                 .mLong(1233L).build();
-        build.putData("xxxxx","sdada");
+        build.putData("xxxxx", "sdada");
+
 //        build.getmListData().saveData("key1",new BaseData.Builder().mStr("xxxxxx1111111xxxxxxxxxx").build());
         return build;
     }

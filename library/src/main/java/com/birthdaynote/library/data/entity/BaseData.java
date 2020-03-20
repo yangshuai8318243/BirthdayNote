@@ -25,7 +25,6 @@ public class BaseData implements Parcelable {
     private Double mDouble;
     private Boolean mBoolean;
     private String mStr;
-    private BaseDataList mListData;
     private Map<String, String> mVarClassName;
     private Map<String, Object> mSimpleMapData;
 
@@ -35,7 +34,6 @@ public class BaseData implements Parcelable {
         mDouble = builder.mDouble;
         mBoolean = builder.mBoolean;
         mStr = builder.mStr;
-        mListData = builder.mListData;
         mVarClassName = builder.mVarClassName;
         mSimpleMapData = builder.mSimpleMapData;
     }
@@ -85,9 +83,22 @@ public class BaseData implements Parcelable {
         return true;
     }
 
+    public <T> T getData(String key) {
+        if (mSimpleMapData.size() > 0) {
+            Object o = mSimpleMapData.get(key);
+            return (T) o;
+        }
+        return null;
+    }
 
     protected BaseData(Parcel in) {
-
+        try {
+            int parcelVersion = in.readInt();
+            Log.e(TAG, "-----parcelVersion---->" + parcelVersion);
+            fromParcelV1(in);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     public final boolean fromParcel(Parcel in) {
@@ -108,17 +119,98 @@ public class BaseData implements Parcelable {
 
     private void fromParcelV1(Parcel in) throws Throwable {
         byte b = in.readByte();
-        if (b == Integer_TAG) {
-            mInt = in.readInt();
-        } else {
+        checkVariable(b, Integer_TAG);
+        mInt = in.readInt();
 
-        }
         b = in.readByte();
+        checkVariable(b, Long_TAG);
+        mLong = in.readLong();
 
-        if (b == Long_TAG) {
+        b = in.readByte();
+        checkVariable(b, Double_TAG);
+        mDouble = in.readDouble();
+
+        b = in.readByte();
+        checkVariable(b, Boolean_TAG);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            mBoolean = in.readBoolean();
+        } else {
+            String s = in.readString();
+            if (s == "0") {
+                mBoolean = true;
+            } else {
+                mBoolean = false;
+            }
+        }
+
+        b = in.readByte();
+        checkVariable(b, String_TAG);
+        mStr = in.readString();
+
+
+
+        mSimpleMapData = new HashMap<>();
+        mVarClassName = new HashMap<>();
+        int itemCount = in.readInt();
+
+        for (int i = 0; i < itemCount; i++) {
+            String key = in.readString();
+            byte type = in.readByte();
+
+            if (type == BaseData_TAG) {
+                BaseData baseData = new BaseData(in);
+                mSimpleMapData.put(key, baseData);
+                mVarClassName.put(key, BaseData.class.getCanonicalName());
+
+            } else if (type == BaseDataList_TAG) {
+                BaseDataList baseDataList = new BaseDataList(in);
+                mSimpleMapData.put(key, baseDataList);
+                mVarClassName.put(key, BaseDataList.class.getCanonicalName());
+
+            } else if (type == String_TAG) {
+                String data = in.readString();
+                mSimpleMapData.put(key, data);
+                mVarClassName.put(key, String.class.getCanonicalName());
+
+            } else if (type == Long_TAG) {
+                Long data = in.readLong();
+                mSimpleMapData.put(key, data);
+                mVarClassName.put(key, Long.class.getCanonicalName());
+
+            } else if (type == Integer_TAG) {
+                Integer data = in.readInt();
+                mSimpleMapData.put(key, data);
+                mVarClassName.put(key, Integer.class.getCanonicalName());
+
+            } else if (type == Double_TAG) {
+                Double data = in.readDouble();
+                mSimpleMapData.put(key, data);
+                mVarClassName.put(key, Double.class.getCanonicalName());
+
+            } else if (type == Boolean_TAG) {
+                Boolean data = (Boolean) in.readSerializable();
+                mSimpleMapData.put(key, data);
+                mVarClassName.put(key, Boolean.class.getCanonicalName());
+
+            } else if (type == OBJ_TAG) {
+                String className = in.readString();
+                Class<?> aClass = Class.forName(className);
+                Parcelable parcelable = in.readParcelable(aClass.getClassLoader());
+
+                mSimpleMapData.put(key, parcelable);
+                mVarClassName.put(key, aClass.getCanonicalName());
+
+            }
+
 
         }
 
+    }
+
+    private void checkVariable(byte b, byte tag) {
+        if (b != tag) {
+            throw new RuntimeException("Current variable " + b + "is not " + tag);
+        }
     }
 
     public static final Creator<BaseData> CREATOR = new Creator<BaseData>() {
@@ -153,6 +245,7 @@ public class BaseData implements Parcelable {
         dest.writeByte(Double_TAG);
         dest.writeDouble(mDouble);
 
+        dest.writeByte(Boolean_TAG);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dest.writeBoolean(mBoolean);
         } else {
@@ -163,30 +256,43 @@ public class BaseData implements Parcelable {
         dest.writeString(mStr);
 
 
+
+        // 写入序列化对象的键值对个数
+        dest.writeInt(mSimpleMapData.size());
+
         for (String key : mSimpleMapData.keySet()) {
             Object jo = mSimpleMapData.get(key);
-            if (jo instanceof BaseData) { // DataItem
+            dest.writeString(key);
+
+            if (jo instanceof BaseData) { // BaseData
                 dest.writeByte(BaseData_TAG);
                 ((BaseData) jo).writeToParcel(dest, flags);
-            } else if (jo instanceof BaseDataList) { // DataItemArray
+
+            } else if (jo instanceof BaseDataList) { // BaseDataList
                 dest.writeByte(BaseDataList_TAG);
                 ((BaseDataList) jo).writeToParcel(dest, flags);
+
             } else if (jo instanceof String) { // String
                 dest.writeByte(String_TAG);
                 dest.writeString((String) jo);
+
             } else if (jo instanceof Long) { // Long
                 dest.writeByte(Long_TAG);
                 dest.writeLong((Long) jo);
+
             } else if (jo instanceof Integer) { // Integer
                 dest.writeByte(Integer_TAG);
                 dest.writeInt((Integer) jo);
+
             } else if (jo instanceof Double) { // Double
                 dest.writeByte(Double_TAG);
                 dest.writeDouble((Double) jo);
+
             } else if (jo instanceof Boolean) { // Boolean
                 dest.writeByte(Boolean_TAG);
                 dest.writeSerializable((Boolean) jo);
-            } else { // 其他类型做为空字符串占位处理
+
+            } else { // 其他类型
                 String className = mVarClassName.get(key);
 
                 dest.writeByte(OBJ_TAG);
@@ -204,7 +310,6 @@ public class BaseData implements Parcelable {
         private Double mDouble = -1.0;
         private Boolean mBoolean = false;
         private String mStr = "";
-        private BaseDataList mListData = new BaseDataList();
         private Map<String, String> mVarClassName = new HashMap<>();
         private Map<String, Object> mSimpleMapData = new HashMap<>();
 
@@ -236,10 +341,7 @@ public class BaseData implements Parcelable {
             return this;
         }
 
-        public Builder mListData(BaseDataList val) {
-            mListData = val;
-            return this;
-        }
+
 
         public Builder mVarClassName(Map<String, String> val) {
             mVarClassName = val;
@@ -254,5 +356,73 @@ public class BaseData implements Parcelable {
         public BaseData build() {
             return new BaseData(this);
         }
+    }
+
+    public Integer getmInt() {
+        return mInt;
+    }
+
+    public void setmInt(Integer mInt) {
+        this.mInt = mInt;
+    }
+
+    public Long getmLong() {
+        return mLong;
+    }
+
+    public void setmLong(Long mLong) {
+        this.mLong = mLong;
+    }
+
+    public Double getmDouble() {
+        return mDouble;
+    }
+
+    public void setmDouble(Double mDouble) {
+        this.mDouble = mDouble;
+    }
+
+    public Boolean getmBoolean() {
+        return mBoolean;
+    }
+
+    public void setmBoolean(Boolean mBoolean) {
+        this.mBoolean = mBoolean;
+    }
+
+    public String getmStr() {
+        return mStr;
+    }
+
+    public void setmStr(String mStr) {
+        this.mStr = mStr;
+    }
+
+
+    public String print() {
+        StringBuilder stringBuilder = new StringBuilder();
+        String s = stringBuilder.append("BaseData_TAG = " + BaseData_TAG)
+                .append("\n")
+                .append("BaseDataList_TAG = " + BaseDataList_TAG)
+                .append("\n")
+                .append("Integer_TAG = " + Integer_TAG)
+                .append("\n")
+                .append("Long_TAG = " + Long_TAG)
+                .append("\n")
+                .append("Double_TAG = " + Double_TAG)
+                .append("\n")
+                .append("Boolean_TAG = " + Boolean_TAG)
+                .append("\n")
+                .append("String_TAG = " + String_TAG)
+                .append("\n").toString();
+        return "BaseData{" +
+                "mInt=" + mInt +
+                ", mLong=" + mLong +
+                ", mDouble=" + mDouble +
+                ", mBoolean=" + mBoolean +
+                ", mStr='" + mStr + '\'' +
+                ", mVarClassName=" + mVarClassName +
+                ", mSimpleMapData=" + mSimpleMapData +
+                '}';
     }
 }
