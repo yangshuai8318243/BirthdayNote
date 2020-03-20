@@ -11,10 +11,13 @@ import androidx.room.Query;
 public interface LocalDao {
 
     @Query("SELECT * FROM local_data WHERE `key` IN (:key)")
-    List<LocalDataEntity> getUrlAll(String key);
+    List<LocalDataEntity> getKeyAll(String key);
 
     @Query("SELECT * FROM local_data WHERE 'type' IN (:type)")
     List<LocalDataEntity> getLocalDataFromType(String type);
+
+    @Query("SELECT * FROM local_data WHERE 'key' IN (:key) AND 'type' IN (:type)")
+    LocalDataEntity getLocalData(String key, String type);
 
     @Insert
     void insertAll(LocalDataEntity... users);

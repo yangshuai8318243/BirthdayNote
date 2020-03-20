@@ -2,10 +2,12 @@ package com.birthdaynote.library.data.local;
 
 import com.birthdaynote.library.app.BaseApp;
 import com.birthdaynote.library.data.local.room.AppLocalDatabase;
+import com.birthdaynote.library.data.local.room.LocalDataEntity;
+import com.google.gson.Gson;
 
 import androidx.room.Room;
 
-public class RoomLocalManager implements LocalDataManager{
+public class RoomLocalManager implements LocalDataManager {
     private static AppLocalDatabase s_AppLocalDatabase = BuildSingletonLocalDatabase.s_AppLocalDatabase;
 
     public static AppLocalDatabase getS_AppLocalDatabase() {
@@ -13,8 +15,11 @@ public class RoomLocalManager implements LocalDataManager{
     }
 
     @Override
-    public <D> D getData(String ket, String type) {
-        return null;
+    public <D> D getData(String key, String type, Class<D> dClass) {
+        LocalDataEntity localData = getS_AppLocalDatabase().localDao().getLocalData(key, type);
+        String jsonData = localData.jsonData;
+        D d = new Gson().fromJson(jsonData, dClass);
+        return d;
     }
 
     @Override
@@ -24,6 +29,6 @@ public class RoomLocalManager implements LocalDataManager{
 
 
     private static class BuildSingletonLocalDatabase {
-        private static final AppLocalDatabase s_AppLocalDatabase = Room.databaseBuilder(BaseApp.getInstance(),AppLocalDatabase.class,"local_data").build();
+        private static final AppLocalDatabase s_AppLocalDatabase = Room.databaseBuilder(BaseApp.getInstance(), AppLocalDatabase.class, "local_data").build();
     }
 }
