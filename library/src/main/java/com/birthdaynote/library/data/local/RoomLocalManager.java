@@ -9,6 +9,7 @@ import androidx.room.Room;
 
 public class RoomLocalManager implements LocalDataManager {
     private static AppLocalDatabase s_AppLocalDatabase = BuildSingletonLocalDatabase.s_AppLocalDatabase;
+    private static final String LOCAL_TYPE = "LOCAL_TYPE";
 
     public static AppLocalDatabase getS_AppLocalDatabase() {
         return s_AppLocalDatabase;
@@ -23,8 +24,13 @@ public class RoomLocalManager implements LocalDataManager {
     }
 
     @Override
-    public <D> void saveData(String url, String type, D data) {
-
+    public <D> void saveData(String key, String type, D data) {
+        String toJson = new Gson().toJson(data);
+        LocalDataEntity localDataEntity = new LocalDataEntity();
+        localDataEntity.jsonData = toJson;
+        localDataEntity.key = key;
+        localDataEntity.type = LOCAL_TYPE;
+        getS_AppLocalDatabase().localDao().insertAll(localDataEntity);
     }
 
 

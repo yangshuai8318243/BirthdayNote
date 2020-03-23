@@ -1,6 +1,8 @@
 package com.birthdaynote.library.data;
 
+import com.birthdaynote.library.data.local.LocalDataManager;
 import com.birthdaynote.library.data.local.RoomLocalManager;
+import com.birthdaynote.library.data.net.NetworkDataManager;
 import com.birthdaynote.library.data.net.OkNetManager;
 import com.birthdaynote.library.data.net.ReqestInterceptor;
 import com.birthdaynote.library.data.net.ResponseInterceptor;
@@ -11,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 
-public class DataManagerDefFactory implements DataManagerFactoryInterface<DataManager> {
+public class DataManagerDefFactory<D extends DataManager> implements DataManagerFactoryInterface<D> {
     private OkHttpClient mOkHttpClient;
     private Headers mHeader;
     private String mMediaType;
@@ -23,14 +25,14 @@ public class DataManagerDefFactory implements DataManagerFactoryInterface<DataMa
     }
 
     @Override
-    public DataManager createDataManager(Class<DataManager> dataManagerClass) {
+    public D createDataManager(Class<D> dataManagerClass) {
         try {
-            Constructor<DataManager> constructor = dataManagerClass.getConstructor(OkNetManager.class, RoomLocalManager.class);
+            Constructor<D> constructor = dataManagerClass.getConstructor(LocalDataManager.class, NetworkDataManager.class);
 
             OkNetManager okNetManager = new OkNetManager(mOkHttpClient, mHeader, mMediaType);
             RoomLocalManager roomLocalManager = new RoomLocalManager();
 
-            return constructor.newInstance(okNetManager, roomLocalManager);
+            return constructor.newInstance(roomLocalManager, okNetManager);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

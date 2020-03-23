@@ -1,5 +1,8 @@
 package com.birthdaynote.library.data.net;
 
+import com.birthdaynote.library.data.entity.ErrorData;
+
+import java.io.IOException;
 import java.util.Map;
 
 public interface NetworkDataManager {
@@ -11,7 +14,7 @@ public interface NetworkDataManager {
      * @param <D>
      * @return
      */
-    <R> R getRequest(Class<R> rClass, String requestUrl);
+    <R> R getRequest(Class<R> rClass, String requestUrl) throws IOException, ErrorData;
 
     /**
      *
@@ -22,7 +25,7 @@ public interface NetworkDataManager {
      * @param <R>
      * @return
      */
-    <R> R postRequest(Class<R> rClass, String requestUrl, Map<String,String> param);
+    <R> R postRequest(Class<R> rClass, String requestUrl, Map<String,String> param) throws IOException, ErrorData;
 
 
 }

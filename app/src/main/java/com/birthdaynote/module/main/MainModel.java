@@ -2,13 +2,17 @@ package com.birthdaynote.module.main;
 
 import android.util.Log;
 
+import com.birthdaynote.library.data.DataManager;
 import com.birthdaynote.library.data.entity.BaseData;
 import com.birthdaynote.library.data.entity.BaseDataList;
 import com.birthdaynote.library.data.entity.DataItem;
 import com.birthdaynote.library.data.entity.DataItemArray;
+import com.birthdaynote.library.data.entity.ErrorData;
 import com.birthdaynote.library.mvp.MvpModel;
+import com.birthdaynote.net.SingleDataManager;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -20,7 +24,8 @@ import okhttp3.ResponseBody;
 
 public class MainModel extends MvpModel<BaseData> {
     private static final OkHttpClient client = new OkHttpClient.Builder().build();
-    private static final String APPKEY = "43d4085685512e1c2e9566b79f329936";
+    private static final String APPKEY = "cd8b3d4c5ff88e61058d3d45f2db7d06";
+
 
     BaseData getImageData() {
         Request.Builder builder = new Request.Builder();
@@ -65,6 +70,27 @@ public class MainModel extends MvpModel<BaseData> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void testNetData() {
+        DataManager dataManager = SingleDataManager.getDataManager();
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        stringStringHashMap.put("subject", "1");
+        stringStringHashMap.put("model", "c1");
+        stringStringHashMap.put("testType", "rand");
+        stringStringHashMap.put("key", APPKEY);
+        dataManager.getData("http://v.juhe.cn/jztk/query", stringStringHashMap, CarApiResult.class, new DataManager.OnDataListener<CarApiResult>() {
+            @Override
+            public void onError(ErrorData errorData) {
+                Log.e(TAG, "---testNetData-----onError----->" + errorData.getMesage());
+            }
+
+            @Override
+            public void onData(CarApiResult carApiResult) {
+                Log.e(TAG, "---testNetData-----onData----->" + carApiResult.toString());
+
+            }
+        });
     }
 
     BaseDataList getList() {

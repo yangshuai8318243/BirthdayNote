@@ -1,8 +1,10 @@
 package com.birthdaynote.library.data.net;
 
+import com.birthdaynote.library.data.entity.ErrorData;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -15,25 +17,21 @@ import okhttp3.Response;
 public class OkNetManager implements NetworkDataManager {
 
     private OkHttpClient mOkHttpClient;
-    private Headers mHeader;
     private String mMediaType;
 
     public OkNetManager(OkHttpClient mOkHttpClient, Headers mHeader, String mMediaType) {
+        mOkHttpClient.newBuilder().addInterceptor(new ErrorInterceptor(new HashMap<Integer, String>()));
         this.mOkHttpClient = mOkHttpClient;
-        this.mHeader = mHeader;
         this.mMediaType = mMediaType;
     }
 
     private Request buildReques(String requestUrl, Map<String, String> param) {
         Request.Builder builder = new Request.Builder();
-        if (mHeader != null && mHeader.size() > 0) {
-            builder.headers(mHeader);
-        }
 
         if (param != null) {
             FormBody.Builder formBder = new FormBody.Builder();
             for (String key : param.keySet()) {
-                formBder.add(key,param.get(key));
+                formBder.add(key, param.get(key));
             }
             builder.post(formBder.build());
         }
@@ -44,30 +42,30 @@ public class OkNetManager implements NetworkDataManager {
 
 
     @Override
-    public <R> R getRequest(Class<R> rClass, String requestUrl) {
-        return request(rClass,requestUrl,null);
+    public <R> R getRequest(Class<R> rClass, String requestUrl) throws IOException, ErrorData {
+        return request(rClass, requestUrl, null);
     }
 
     @Override
-    public <R> R postRequest(Class<R> rClass, String requestUrl, Map<String, String> param) {
+    public <R> R postRequest(Class<R> rClass, String requestUrl, Map<String, String> param) throws IOException, ErrorData {
         return request(rClass, requestUrl, param);
     }
 
 
-    private <R> R request(Class<R> rClass, String requestUrl, Map<String, String> param) {
+    private <R> R request(Class<R> rClass, String requestUrl, Map<String, String> param) throws IOException, ErrorData {
         Request request = buildReques(requestUrl, param);
         Call call = mOkHttpClient.newCall(request);
 
-        try {
-            Response execute = call.execute();
-            String string = execute.body().string();
-            R fromJson = new Gson().<R>fromJson(string, rClass);
-            return fromJson;
-        } catch (IOException e) {
-            e.printStackTrace();
+        Response execute = call.execute();
+
+        if (execute.code() != 200) {
+            throw new ErrorData.Builder().mesage(execute.message()).code(execute.code()).build();
         }
 
-        return null;
+        String string = execute.body().string();
+        R fromJson = new Gson().<R>fromJson(string, rClass);
+        return fromJson;
+
     }
 
 }
