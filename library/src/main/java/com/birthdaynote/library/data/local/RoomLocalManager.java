@@ -18,9 +18,12 @@ public class RoomLocalManager implements LocalDataManager {
     @Override
     public <D> D getData(String key, String type, Class<D> dClass) {
         LocalDataEntity localData = getS_AppLocalDatabase().localDao().getLocalData(key, type);
-        String jsonData = localData.jsonData;
-        D d = new Gson().fromJson(jsonData, dClass);
-        return d;
+        if (localData != null) {
+            String jsonData = localData.jsonData;
+            D d = new Gson().fromJson(jsonData, dClass);
+            return d;
+        }
+        return null;
     }
 
     @Override

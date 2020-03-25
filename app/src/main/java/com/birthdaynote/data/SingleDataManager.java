@@ -1,4 +1,4 @@
-package com.birthdaynote.net;
+package com.birthdaynote.data;
 
 import com.birthdaynote.library.data.DataManager;
 import com.birthdaynote.library.data.DataManagerDefFactory;

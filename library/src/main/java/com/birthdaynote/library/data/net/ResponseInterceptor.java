@@ -13,7 +13,7 @@ public class ResponseInterceptor implements Interceptor {
         Response proceed = chain.proceed(chain.request());
         String s = proceed.toString();
         String string = proceed.body().string();
-        Log.e("ResponseInterceptor", s + "\n" + string);
+//        Log.e("ResponseInterceptor", s + "\n" + string);
 
         return chain.proceed(chain.request());
     }

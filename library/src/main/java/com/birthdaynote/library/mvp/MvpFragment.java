@@ -1,6 +1,7 @@
 package com.birthdaynote.library.mvp;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.birthdaynote.library.app.BaseFragment;
 import com.birthdaynote.library.data.entity.MvpData;
@@ -15,7 +16,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
-public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInterface> extends BaseFragment implements ViewInterface<E>  {
+public abstract class MvpFragment<P extends PresenterInterface, E extends EvenInterface> extends BaseFragment implements ViewInterface<E> {
     private P mPtr;
     private Subject<E> mEven;
     private Disposable mDisposable;
@@ -30,13 +31,13 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
         bindBaseEven();
     }
 
-    private void bindBaseEven(){
+    private void bindBaseEven() {
         mBindLiveData.bindLiveData(EvenConstants.START_ACTIVIT_PTR_TAG, new Observer<MvpData>() {
             @Override
             public void onChanged(MvpData baseDataList) {
                 Class className = baseDataList.getmClassName();
                 Bundle bundle = baseDataList.getmData();
-                startActivity(className,bundle);
+                startActivity(className, bundle);
             }
         });
         mBindLiveData.bindLiveData(EvenConstants.START_CANONICAL_PTR_TAG, new Observer<MvpData>() {
@@ -47,6 +48,29 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
                 startContainerActivity(fragmentName, bundle);
             }
         });
+        mBindLiveData.bindLiveData(EvenConstants.REQUEST_PERMISSIONS, new Observer<MvpData>() {
+            @Override
+            public void onChanged(MvpData mvpData) {
+                String[] permissions = mvpData.getPermissions();
+                requestPermissions(permissions);
+            }
+        });
+    }
+
+    @Override
+    public void onFailurePermissions(String permission) {
+        super.onFailurePermissions(permission);
+        if (mPtr != null){
+            mPtr.onFailurePermissions(permission);
+        }
+    }
+
+    @Override
+    public void onSuccessPermissions(String permission) {
+        super.onSuccessPermissions(permission);
+        if (mPtr != null){
+            mPtr.onSuccessPermissions(permission);
+        }
     }
 
 
@@ -82,7 +106,7 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
     @Override
     public void bindPtr() {
         mPtr = initPtr();
-        if (mPtr != null){
+        if (mPtr != null) {
             getLifecycle().addObserver(mPtr);
             mEven = newSubscriber();
             mDisposable = mEven.subscribe(mPtr);
@@ -91,11 +115,11 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
 
     @Override
     public void unBindPtr() {
-        if (mPtr != null){
+        if (mPtr != null) {
             getLifecycle().removeObserver(mPtr);
             mPtr = null;
         }
-        if (mDisposable!=null) {
+        if (mDisposable != null) {
             mDisposable.dispose();
         }
     }
@@ -104,7 +128,7 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
         mPtr.bindViewLiveData(this, tag, observer);
     }
 
-    protected Subject<E> newSubscriber(){
+    protected Subject<E> newSubscriber() {
         PublishSubject<E> objectPublishSubject = PublishSubject.create();
         return objectPublishSubject;
     }
@@ -114,18 +138,18 @@ public abstract class MvpFragment<P extends PresenterInterface,E extends EvenInt
         mEven.onNext(even);
     }
 
-    protected BindLiveData sendEvenBindData(E even){
+    protected BindLiveData sendEvenBindData(E even) {
         sendEven(even);
         return mBindLiveData;
     }
 
-    protected class BindLiveData{
+    protected class BindLiveData {
         public void bindLiveData(String tag, Observer observer) {
             mPtr.bindViewLiveData(MvpFragment.this, tag, observer);
         }
     }
 
-    protected PtrFactoryInterface getPtrFactory(){
+    protected PtrFactoryInterface getPtrFactory() {
         return PtrFactory.getFactory();
     }
 

@@ -1,4 +1,4 @@
-package com.birthdaynote.module.main;
+package com.birthdaynote.data.entity;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.birthdaynote.library.mvp;
 
 
-
+import com.birthdaynote.library.app.PermissionsListener;
 import com.birthdaynote.library.mvp.even.EvenInterface;
 
 import androidx.lifecycle.Lifecycle;
@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.OnLifecycleEvent;
 import io.reactivex.functions.Consumer;
 
-public interface PresenterInterface<E extends EvenInterface> extends LifecycleObserver,Consumer<E>{
+public interface PresenterInterface<E extends EvenInterface> extends LifecycleObserver, Consumer<E>, PermissionsListener {
     @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
     void onAny(LifecycleOwner owner, Lifecycle.Event event);
 

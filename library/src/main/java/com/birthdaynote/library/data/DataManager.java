@@ -1,6 +1,6 @@
 package com.birthdaynote.library.data;
 
-import com.birthdaynote.library.data.entity.ErrorData;
+import com.birthdaynote.library.data.entity.DecorationData;
 import com.birthdaynote.library.data.local.LocalDataManager;
 import com.birthdaynote.library.data.net.NetworkDataManager;
 
@@ -9,6 +9,14 @@ import java.util.Map;
 public abstract class DataManager {
     protected LocalDataManager mLocalDataManager;
     protected NetworkDataManager mNetworkDataManager;
+
+    public DataManager(NetworkDataManager mNetworkDataManager) {
+        this.mNetworkDataManager = mNetworkDataManager;
+    }
+
+    public DataManager(LocalDataManager mLocalDataManager) {
+        this.mLocalDataManager = mLocalDataManager;
+    }
 
     public DataManager(LocalDataManager mLocalDataManager, NetworkDataManager mNetworkDataManager) {
         this.mLocalDataManager = mLocalDataManager;
@@ -19,12 +27,13 @@ public abstract class DataManager {
      * @param url
      * @param param
      */
-    public abstract <D> void getData(String url, Map<String, String> param, Class<D> dClass, OnDataListener<D> onDataListener);
+    public abstract <D> void getAsynchronousData(String url, Map<String, String> param, Class<D> dClass, OnDataListener onDataListener);
 
-    public interface OnDataListener<D> {
-        void onError(ErrorData errorData);
+    public abstract <D> DecorationData getSynchronizeData(String url, Map<String, String> param, Class<D> dClass);
 
-        void onData(D d);
+
+    public interface OnDataListener {
+        void onData(DecorationData d);
     }
 
 

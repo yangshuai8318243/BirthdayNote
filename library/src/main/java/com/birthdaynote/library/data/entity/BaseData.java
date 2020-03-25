@@ -20,20 +20,20 @@ public class BaseData implements Parcelable {
     private static final int CURRENT_PARCEL_VERSION = 1; // 当前序列化格式的版本号
 
     private static final String TAG = "BaseData";
-    private Integer mInt;
+    private Integer errorCode;
     private Long mLong;
     private Double mDouble;
-    private Boolean mBoolean;
-    private String mStr;
+    private Boolean isOk;
+    private String message;
     private Map<String, String> mVarClassName;
     private Map<String, Object> mSimpleMapData;
 
     private BaseData(Builder builder) {
-        mInt = builder.mInt;
-        mLong = builder.mLong;
-        mDouble = builder.mDouble;
-        mBoolean = builder.mBoolean;
-        mStr = builder.mStr;
+        setErrorCode(builder.errorCode);
+        setmLong(builder.mLong);
+        setmDouble(builder.mDouble);
+        setIsOk(builder.isOk);
+        setMessage(builder.message);
         mVarClassName = builder.mVarClassName;
         mSimpleMapData = builder.mSimpleMapData;
     }
@@ -120,7 +120,7 @@ public class BaseData implements Parcelable {
     private void fromParcelV1(Parcel in) throws Throwable {
         byte b = in.readByte();
         checkVariable(b, Integer_TAG);
-        mInt = in.readInt();
+        errorCode = in.readInt();
 
         b = in.readByte();
         checkVariable(b, Long_TAG);
@@ -133,20 +133,19 @@ public class BaseData implements Parcelable {
         b = in.readByte();
         checkVariable(b, Boolean_TAG);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mBoolean = in.readBoolean();
+            isOk = in.readBoolean();
         } else {
             String s = in.readString();
             if (s == "0") {
-                mBoolean = true;
+                isOk = true;
             } else {
-                mBoolean = false;
+                isOk = false;
             }
         }
 
         b = in.readByte();
         checkVariable(b, String_TAG);
-        mStr = in.readString();
-
+        message = in.readString();
 
 
         mSimpleMapData = new HashMap<>();
@@ -237,7 +236,7 @@ public class BaseData implements Parcelable {
         dest.writeInt(CURRENT_PARCEL_VERSION);
 
         dest.writeByte(Integer_TAG);
-        dest.writeInt(mInt);
+        dest.writeInt(errorCode);
 
         dest.writeByte(Long_TAG);
         dest.writeLong(mLong);
@@ -247,14 +246,13 @@ public class BaseData implements Parcelable {
 
         dest.writeByte(Boolean_TAG);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            dest.writeBoolean(mBoolean);
+            dest.writeBoolean(isOk);
         } else {
-            dest.writeString(mBoolean ? "0" : "1");
+            dest.writeString(isOk ? "0" : "1");
         }
 
         dest.writeByte(String_TAG);
-        dest.writeString(mStr);
-
+        dest.writeString(message);
 
 
         // 写入序列化对象的键值对个数
@@ -304,66 +302,12 @@ public class BaseData implements Parcelable {
     }
 
 
-    public static final class Builder {
-        private Integer mInt = -1;
-        private Long mLong = -1L;
-        private Double mDouble = -1.0;
-        private Boolean mBoolean = false;
-        private String mStr = "";
-        private Map<String, String> mVarClassName = new HashMap<>();
-        private Map<String, Object> mSimpleMapData = new HashMap<>();
-
-        public Builder() {
-        }
-
-        public Builder mInt(Integer val) {
-            mInt = val;
-            return this;
-        }
-
-        public Builder mLong(Long val) {
-            mLong = val;
-            return this;
-        }
-
-        public Builder mDouble(Double val) {
-            mDouble = val;
-            return this;
-        }
-
-        public Builder mBoolean(Boolean val) {
-            mBoolean = val;
-            return this;
-        }
-
-        public Builder mStr(String val) {
-            mStr = val;
-            return this;
-        }
-
-
-
-        public Builder mVarClassName(Map<String, String> val) {
-            mVarClassName = val;
-            return this;
-        }
-
-        public Builder mSimpleMapData(Map<String, Object> val) {
-            mSimpleMapData = val;
-            return this;
-        }
-
-        public BaseData build() {
-            return new BaseData(this);
-        }
+    public Integer getErrorCode() {
+        return errorCode;
     }
 
-    public Integer getmInt() {
-        return mInt;
-    }
-
-    public void setmInt(Integer mInt) {
-        this.mInt = mInt;
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
     }
 
     public Long getmLong() {
@@ -382,24 +326,27 @@ public class BaseData implements Parcelable {
         this.mDouble = mDouble;
     }
 
-    public Boolean getmBoolean() {
-        return mBoolean;
+    public Boolean getIsOk() {
+        return isOk;
     }
 
-    public void setmBoolean(Boolean mBoolean) {
-        this.mBoolean = mBoolean;
+    public void setIsOk(Boolean isOk) {
+        this.isOk = isOk;
     }
 
-    public String getmStr() {
-        return mStr;
+    public String getMessage() {
+        return message;
     }
 
-    public void setmStr(String mStr) {
-        this.mStr = mStr;
+    public void setMessage(String message) {
+        this.message = message;
     }
-
 
     public String print() {
+        return print(true, false);
+    }
+
+    public String print(boolean isSimple, boolean isShowTag) {
         StringBuilder stringBuilder = new StringBuilder();
         String s = stringBuilder.append("BaseData_TAG = " + BaseData_TAG)
                 .append("\n")
@@ -415,14 +362,77 @@ public class BaseData implements Parcelable {
                 .append("\n")
                 .append("String_TAG = " + String_TAG)
                 .append("\n").toString();
-        return "BaseData{" +
-                "mInt=" + mInt +
+        String s1 = "BaseData{" +
+                "mInt=" + errorCode +
                 ", mLong=" + mLong +
                 ", mDouble=" + mDouble +
-                ", mBoolean=" + mBoolean +
-                ", mStr='" + mStr + '\'' +
-                ", mVarClassName=" + mVarClassName +
+                ", mBoolean=" + isOk +
                 ", mSimpleMapData=" + mSimpleMapData +
-                '}';
+                ", mStr='" + message + '\'';
+        if (isSimple) {
+            s1 = s1 + "}";
+        } else {
+            s1 = s1 +
+                    ", mVarClassName=" + mVarClassName +
+                    ", mSimpleMapData=" + mSimpleMapData +
+                    '}';
+        }
+
+        if (isShowTag) {
+            s1 = s1 + "\n" + s;
+        }
+        return s1;
+    }
+
+    public static final class Builder {
+        private Integer errorCode = -1;
+        private Long mLong = -1L;
+        private Double mDouble = -1.0;
+        private Boolean isOk = true;
+        private String message = "";
+        private Map<String, String> mVarClassName = new HashMap<>();
+        private Map<String, Object> mSimpleMapData = new HashMap<>();
+
+        public Builder() {
+        }
+
+        public Builder errorCode(Integer val) {
+            errorCode = val;
+            return this;
+        }
+
+        public Builder mLong(Long val) {
+            mLong = val;
+            return this;
+        }
+
+        public Builder mDouble(Double val) {
+            mDouble = val;
+            return this;
+        }
+
+        public Builder isOk(Boolean val) {
+            isOk = val;
+            return this;
+        }
+
+        public Builder message(String val) {
+            this.message = val;
+            return this;
+        }
+
+        public Builder mVarClassName(Map<String, String> val) {
+            mVarClassName = val;
+            return this;
+        }
+
+        public Builder mSimpleMapData(Map<String, Object> val) {
+            mSimpleMapData = val;
+            return this;
+        }
+
+        public BaseData build() {
+            return new BaseData(this);
+        }
     }
 }

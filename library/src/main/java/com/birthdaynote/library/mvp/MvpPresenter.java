@@ -1,6 +1,8 @@
 package com.birthdaynote.library.mvp;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -9,8 +11,15 @@ import com.birthdaynote.library.mvp.even.EvenConstants;
 import com.birthdaynote.library.mvp.even.EvenInterface;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -29,6 +38,7 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
     private CompositeDisposable mCompositeDisposable;
     private MediatorLiveData<MvpData> mStartActivityLive;
     private MediatorLiveData<MvpData> mStartCanonicalActivityLive;
+    private MediatorLiveData<MvpData> mRequestPermission;
 
     public MvpPresenter(V view) {
         TAG = getClass().getName();
@@ -37,6 +47,16 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
         this.mLiveDataMap = addLiveData();
         bindStarActivityEven();
         mCompositeDisposable = new CompositeDisposable();
+    }
+
+    @Override
+    public void onSuccessPermissions(String permission) {
+
+    }
+
+    @Override
+    public void onFailurePermissions(String permission) {
+
     }
 
     /**
@@ -94,8 +114,34 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
         checkLiveDataMap();
         mStartActivityLive = new MediatorLiveData<>();
         mStartCanonicalActivityLive = new MediatorLiveData<>();
+        mRequestPermission = new MediatorLiveData<>();
         mLiveDataMap.put(EvenConstants.START_ACTIVIT_PTR_TAG, mStartActivityLive);
         mLiveDataMap.put(EvenConstants.START_CANONICAL_PTR_TAG, mStartCanonicalActivityLive);
+        mLiveDataMap.put(EvenConstants.REQUEST_PERMISSIONS, mRequestPermission);
+    }
+
+    /**
+     * 单个权限申请
+     *
+     * @param permission
+     */
+    protected void requestPermissions(String permission) {
+        String[] strings = new String[]{permission};
+        requestPermissions(strings);
+    }
+
+    /**
+     * 多个权限申请
+     *
+     * @param permissions
+     */
+    @Override
+    public void requestPermissions(String[] permissions) {
+        MvpData mvpData = new MvpData();
+        ArrayList<String> strings = new ArrayList<>();
+        Collections.addAll(strings, permissions);
+        mvpData.add(strings);
+        mRequestPermission.setValue(mvpData);
     }
 
 
@@ -148,6 +194,7 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
     public void startContainerActivity(String canonicalName) {
         startContainerActivity(canonicalName, null);
     }
+
 
     /**
      * 跳转容器页面

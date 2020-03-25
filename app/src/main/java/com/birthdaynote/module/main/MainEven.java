@@ -5,6 +5,7 @@ import com.birthdaynote.library.mvp.even.EvenInterface;
 
 public class MainEven implements EvenInterface<BaseData> {
     public static final String MAIN_GET_IMAGE_DATA = "MAIN_GET_IMAGE_DATA";
+    public static final String MAIN_GET_WEATHER_DATA = "MAIN_GET_WEATHER_DATA";
     private String mTag = "";
     private BaseData mDefultData = new BaseData.Builder().build();
 

@@ -2,14 +2,15 @@ package com.birthdaynote.module.main;
 
 import android.util.Log;
 
+import com.birthdaynote.data.entity.CarApiResult;
+import com.birthdaynote.data.entity.Weather;
+import com.birthdaynote.data.global.APP_KEY;
 import com.birthdaynote.library.data.DataManager;
 import com.birthdaynote.library.data.entity.BaseData;
 import com.birthdaynote.library.data.entity.BaseDataList;
-import com.birthdaynote.library.data.entity.DataItem;
-import com.birthdaynote.library.data.entity.DataItemArray;
-import com.birthdaynote.library.data.entity.ErrorData;
+import com.birthdaynote.library.data.entity.DecorationData;
 import com.birthdaynote.library.mvp.MvpModel;
-import com.birthdaynote.net.SingleDataManager;
+import com.birthdaynote.data.SingleDataManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,31 +25,58 @@ import okhttp3.ResponseBody;
 
 public class MainModel extends MvpModel<BaseData> {
     private static final OkHttpClient client = new OkHttpClient.Builder().build();
-    private static final String APPKEY = "cd8b3d4c5ff88e61058d3d45f2db7d06";
+    String cityName = "深圳";
+    private static final String WEATHER_URL = "https://way.jd.com/jisuapi/weather";
 
+    BaseData getWeatherData() {
+        BaseData.Builder builder = new BaseData.Builder();
 
-    BaseData getImageData() {
-        Request.Builder builder = new Request.Builder();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("city", cityName);
+        hashMap.put("appkey", APP_KEY.WEATHER_APPKEY);
+        DecorationData synchronizeData = SingleDataManager.getDataManager().getSynchronizeData(WEATHER_URL, hashMap, Weather.class);
+        int dataCode = synchronizeData.getCode();
 
-        builder.url("http://v.juhe.cn/toutiao/index?type=top&key=" + APPKEY);
-        Call call = client.newCall(builder.build());
-        try {
-            Response execute = call.execute();
-            ResponseBody body = execute.body();
-            String string = body.string();
-            Log.e("getImageData", "---->" + string);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (dataCode == DecorationData.DEF_CODE) {
+            Log.e(TAG, "2222222222222");
+
+            Weather data = synchronizeData.getData();
+            String code = data.getCode();
+            Weather.ResultBeanX result = data.getResult();
+
+            if (result != null && "10000".equals(code)) {
+
+                Weather.ResultBeanX.ResultBean resultBean = result.getResult();
+
+                if (resultBean != null && result.getStatus() == 0) {
+
+                    BaseData build = builder.isOk(true).build();
+                    build.putData("city", resultBean.getCity());
+                    build.putData("weather", resultBean.getWeather());
+                    build.putData("temp", resultBean.getTemp());
+                    build.putData("temphigh", resultBean.getTemphigh());
+                    build.putData("templow", resultBean.getTemplow());
+                    build.putData("sunrise", resultBean.getDaily().get(0).getSunrise());
+                    build.putData("sunset", resultBean.getDaily().get(0).getSunset());
+                    build.putData("quality", resultBean.getAqi().getQuality());
+                    return build;
+                } else {
+                    return builder.isOk(false).errorCode(00).message(result.getMsg()).build();
+                }
+            } else {
+                return builder.isOk(false).errorCode(00).message(data.getMsg()).build();
+            }
+
         }
 
-        BaseData build = new BaseData.Builder()
-                .mBoolean(false)
-                .mStr("11111")
-                .mDouble(1.0)
-                .mInt(233)
-                .mLong(1233L).build();
-//        build.getmListData().saveData("key1",new BaseData.Builder().mStr("xxxxxx1111111xxxxxxxxxx").build());
-        return build;
+        return builder.isOk(false).
+
+                errorCode(synchronizeData.getCode()).
+
+                message(synchronizeData.getMesage()).
+
+                build();
+
     }
 
     private void postReq() {
@@ -58,7 +86,7 @@ public class MainModel extends MvpModel<BaseData> {
         MediaType mediaType = MediaType.parse("text/x-markdown; charset=utf-8");
         FormBody formBody = new FormBody.Builder()
                 .add("type", "top")
-                .add("key", APPKEY)
+                .add("key", APP_KEY.APPKEY)
                 .build();
         builder.post(formBody);
         Call call = client.newCall(builder.build());
@@ -72,54 +100,6 @@ public class MainModel extends MvpModel<BaseData> {
         }
     }
 
-    void testNetData() {
-        DataManager dataManager = SingleDataManager.getDataManager();
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
-        stringStringHashMap.put("subject", "1");
-        stringStringHashMap.put("model", "c1");
-        stringStringHashMap.put("testType", "rand");
-        stringStringHashMap.put("key", APPKEY);
-        dataManager.getData("http://v.juhe.cn/jztk/query", stringStringHashMap, CarApiResult.class, new DataManager.OnDataListener<CarApiResult>() {
-            @Override
-            public void onError(ErrorData errorData) {
-                Log.e(TAG, "---testNetData-----onError----->" + errorData.getMesage());
-            }
-
-            @Override
-            public void onData(CarApiResult carApiResult) {
-                Log.e(TAG, "---testNetData-----onData----->" + carApiResult.toString());
-
-            }
-        });
-    }
-
-    BaseDataList getList() {
-        BaseDataList baseDataList = new BaseDataList();
-        baseDataList.saveData(new BaseData.Builder().mStr("getList").build());
-        return baseDataList;
-    }
-
-    DataItemArray getArrList() {
-        DataItemArray dataItemArray = new DataItemArray();
-        dataItemArray.add("dataItemArrayStr");
-        DataItem dataItem = new DataItem();
-        dataItem.setBool("setBool", true);
-        dataItemArray.add(dataItem);
-        return dataItemArray;
-    }
-
-    BaseData getPost() {
-        BaseData build = new BaseData.Builder()
-                .mBoolean(false)
-                .mStr("11111")
-                .mDouble(1.0)
-                .mInt(233)
-                .mLong(1233L).build();
-        build.putData("xxxxx", "sdada");
-
-//        build.getmListData().saveData("key1",new BaseData.Builder().mStr("xxxxxx1111111xxxxxxxxxx").build());
-        return build;
-    }
 
     @Override
     public void onCleared() {

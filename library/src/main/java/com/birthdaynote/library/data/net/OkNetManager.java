@@ -1,9 +1,8 @@
 package com.birthdaynote.library.data.net;
 
-import com.birthdaynote.library.data.entity.ErrorData;
+import com.birthdaynote.library.data.entity.DecorationData;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,24 +41,24 @@ public class OkNetManager implements NetworkDataManager {
 
 
     @Override
-    public <R> R getRequest(Class<R> rClass, String requestUrl) throws IOException, ErrorData {
+    public <R> R getRequest(Class<R> rClass, String requestUrl) throws Throwable {
         return request(rClass, requestUrl, null);
     }
 
     @Override
-    public <R> R postRequest(Class<R> rClass, String requestUrl, Map<String, String> param) throws IOException, ErrorData {
+    public <R> R postRequest(Class<R> rClass, String requestUrl, Map<String, String> param) throws Throwable {
         return request(rClass, requestUrl, param);
     }
 
 
-    private <R> R request(Class<R> rClass, String requestUrl, Map<String, String> param) throws IOException, ErrorData {
+    private <R> R request(Class<R> rClass, String requestUrl, Map<String, String> param) throws Throwable {
         Request request = buildReques(requestUrl, param);
         Call call = mOkHttpClient.newCall(request);
 
         Response execute = call.execute();
 
         if (execute.code() != 200) {
-            throw new ErrorData.Builder().mesage(execute.message()).code(execute.code()).build();
+            throw new DecorationData.Builder().mesage(execute.message()).code(execute.code()).build();
         }
 
         String string = execute.body().string();

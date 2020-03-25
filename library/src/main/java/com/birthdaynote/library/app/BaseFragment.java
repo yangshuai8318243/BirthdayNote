@@ -1,6 +1,8 @@
 package com.birthdaynote.library.app;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,13 +11,19 @@ import android.view.ViewGroup;
 
 import com.birthdaynote.library.mvp.ContainerActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment implements PermissionsListener {
     protected static String TAG = "";
+    private static final String BASE_TAG = "BaseFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,7 +37,7 @@ public class BaseFragment extends Fragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    protected void addFragment(Class<Fragment> fragmentClass, int viewId){
+    protected void addFragment(Class<Fragment> fragmentClass, int viewId) {
         Fragment baseFragment = null;
         try {
             baseFragment = fragmentClass.newInstance();
@@ -39,20 +47,20 @@ public class BaseFragment extends Fragment {
             e.printStackTrace();
         }
 
-        if (baseFragment != null){
-            addFragment(baseFragment,viewId);
-        }else {
+        if (baseFragment != null) {
+            addFragment(baseFragment, viewId);
+        } else {
             throw new RuntimeException("baseFragment is Null");
         }
     }
 
-    protected void addFragment(Fragment fragment,int viewId){
-        if (fragment != null){
+    protected void addFragment(Fragment fragment, int viewId) {
+        if (fragment != null) {
             FragmentTransaction trans = getActivity().getSupportFragmentManager()
                     .beginTransaction();
             trans.replace(viewId, fragment);
             trans.commitAllowingStateLoss();
-        }else {
+        } else {
             throw new RuntimeException("baseFragment is Null");
         }
     }
@@ -64,6 +72,79 @@ public class BaseFragment extends Fragment {
      */
     public void startActivity(Class<?> clz) {
         startActivity(new Intent(getContext(), clz));
+    }
+
+    /**
+     * 单个权限申请
+     *
+     * @param permission
+     */
+    protected void requestPermissions(String permission) {
+        String[] strings = new String[]{permission};
+        requestPermissions(strings);
+    }
+
+    /**
+     * 多个权限申请
+     *
+     * @param permissions
+     */
+    @Override
+    public void requestPermissions(String[] permissions) {
+        List<String> permissionList = new ArrayList<>();
+
+        for (String pes : permissions) {
+            if (ContextCompat.checkSelfPermission(getContext(), pes) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(pes);
+            } else {
+                onSuccessPermissions(pes);
+            }
+        }
+
+        if (!permissionList.isEmpty()) {  //申请的集合不为空时，表示有需要申请的权限
+            ActivityCompat.requestPermissions(getActivity(), permissionList.toArray(new String[permissionList.size()]), 1);
+        }
+    }
+
+
+    @Override
+    public void onFailurePermissions(String Permission) {
+
+    }
+
+    @Override
+    public void onSuccessPermissions(String Permission) {
+
+    }
+
+
+    /**
+     * 权限申请返回结果
+     *
+     * @param requestCode  请求码
+     * @param permissions  权限数组
+     * @param grantResults 申请结果数组，里面都是int类型的数
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0) { //安全写法，如果小于0，肯定会出错了
+                    for (int i = 0; i < grantResults.length; i++) {
+                        int grantResult = grantResults[i];
+                        String pes = permissions[i];
+                        if (grantResult == PackageManager.PERMISSION_DENIED) { //这个是权限拒绝
+                            onFailurePermissions(pes);
+                        } else { //授权成功了
+                            onSuccessPermissions(pes);
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     /**

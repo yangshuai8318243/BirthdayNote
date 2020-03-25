@@ -1,15 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/main_image"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/main_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher"
+
+            tools:visibility="visible" />
+
+        <RelativeLayout
+            android:id="@+id/weather_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/weather_image"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/ic_launcher"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/city"
+                style="@style/weather_text_style"
+                android:layout_alignTop="@id/weather_image"
+                android:layout_toRightOf="@id/weather_image"
+                android:text="当前城市:" />
+
+            <TextView
+                android:id="@+id/city_name"
+                style="@style/weather_text_style"
+                android:layout_alignTop="@id/weather_image"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@id/city"
+                tools:text="中国x丹丹" />
+
+            <TextView
+                android:id="@+id/temperature"
+                style="@style/weather_text_style"
+                android:layout_below="@id/city"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/weather_image"
+                android:text="当前气温:" />
+
+            <TextView
+                android:id="@+id/temperature_name"
+                style="@style/weather_text_style"
+                android:layout_below="@id/city"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/temperature"
+                tools:text="36.9" />
+
+            <TextView
+                android:id="@+id/max_temperature"
+                style="@style/weather_text_style"
+                android:layout_below="@id/temperature"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/weather_image"
+                android:text="最高气温:" />
+
+            <TextView
+                android:id="@+id/max_temperature_name"
+                style="@style/weather_text_style"
+                android:layout_below="@id/temperature"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/max_temperature"
+                tools:text="36.9" />
+
+            <TextView
+                android:id="@+id/quality"
+                style="@style/weather_text_style"
+                android:layout_below="@id/max_temperature"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/weather_image"
+                android:text="污染指数:" />
+
+            <TextView
+                android:id="@+id/quality_name"
+                style="@style/weather_text_style"
+                android:layout_below="@id/max_temperature"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/quality"
+                tools:text="36.9" />
+
+            <TextView
+                android:id="@+id/sunset"
+                style="@style/weather_text_style"
+                android:layout_below="@id/sunrise"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/weather_image"
+                android:text="日落时间:" />
+
+            <TextView
+                android:id="@+id/sunset_name"
+                style="@style/weather_text_style"
+                android:layout_below="@id/sunrise"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/sunset"
+                tools:text="36.9" />
+
+            <TextView
+                android:id="@+id/sunrise"
+                style="@style/weather_text_style"
+                android:layout_below="@id/quality_name"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/weather_image"
+                android:text="日出时间:" />
+
+            <TextView
+                android:id="@+id/sunrise_name"
+                style="@style/weather_text_style"
+                android:layout_below="@id/quality_name"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/sunrise"
+                tools:text="36.9" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,14 +140,14 @@
 
         <Button
             android:id="@+id/back_btn"
-            android:layout_width="50dp"
+            android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="15sp"
-            android:text="点击测试"/>
+            android:layout_marginTop="10dp"
+            android:text="跳过"
+            android:textSize="15sp" />
 
     </RelativeLayout>
 
