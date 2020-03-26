@@ -67,6 +67,20 @@ public class MainFragment extends BDFragment<MainPtr, MainEven> {
     }
 
     private void initLiveData() {
+        initWeatherDataError();
+        initWeatherDataOk();
+    }
+
+    private void initWeatherDataError(){
+        bindLiveData(MainEven.MAIN_GET_WEATHER_DATA_ERROR, new Observer() {
+            @Override
+            public void onChanged(Object o) {
+
+            }
+        });
+    }
+
+    private void initWeatherDataOk(){
         bindLiveData(MainEven.MAIN_GET_WEATHER_DATA, (Observer<BaseData>) baseData -> {
 
             if (baseData.getIsOk()) {
@@ -131,9 +145,9 @@ public class MainFragment extends BDFragment<MainPtr, MainEven> {
 
     @OnClick(R.id.back_btn)
     protected void onClick() {
-        MainEven mainEven = new MainEven();
-        mainEven.setTag(MainEven.MAIN_GET_WEATHER_DATA);
-        sendEven(mainEven);
+//        MainEven mainEven = new MainEven();
+//        mainEven.setTag(MainEven.MAIN_GET_WEATHER_DATA);
+//        sendEven(mainEven);
     }
 
 

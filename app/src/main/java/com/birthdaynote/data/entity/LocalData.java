@@ -22,6 +22,19 @@ public class LocalData {
      */
     String featureName;
 
+    /**
+     * 获取时间戳
+     */
+    long getTime = -1;
+
+    public long getGetTime() {
+        return getTime;
+    }
+
+    public void setGetTime(long getTime) {
+        this.getTime = getTime;
+    }
+
     public String getCountryName() {
         return countryName;
     }

@@ -51,7 +51,7 @@ public class DefDataManaget extends DataManager {
                 decorationData = new DecorationData.Builder().code(00).mesage("数据解析失败").build();
             } catch (Throwable throwable) {
                 decorationData = new DecorationData.Builder().code(00).mesage("网络请求异常").build();
-                Log.e("", "" + PrintUtils.errInfo( throwable));
+                Log.e("", "" + PrintUtils.errInfo(throwable));
             }
         } else {
             D data = mLocalDataManager.getData(url, "", dClass);
@@ -62,6 +62,16 @@ public class DefDataManaget extends DataManager {
             }
         }
         return decorationData;
+    }
+
+    @Override
+    public <D> void saveLocalData(String key, String type, D data) {
+        mLocalDataManager.saveData(key, type, data);
+    }
+
+    @Override
+    public <D> D getLocalData(String key, String type, Class<D> dClass) {
+        return mLocalDataManager.getData(key, type, dClass);
     }
 
 

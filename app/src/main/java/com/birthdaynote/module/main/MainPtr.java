@@ -8,9 +8,10 @@ import com.birthdaynote.app.BirthdayApp;
 import com.birthdaynote.app.Location;
 import com.birthdaynote.data.entity.LocalData;
 import com.birthdaynote.library.data.entity.BaseData;
-import com.birthdaynote.library.data.entity.DecorationData;
 import com.birthdaynote.library.mvp.MvpPresenter;
 import com.birthdaynote.library.util.RxUtils;
+import com.birthdaynote.library.util.constant.TimeConstants;
+import com.birthdaynote.module.home.HomeFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ import io.reactivex.functions.Consumer;
 public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     private MediatorLiveData<BaseData> weatherLiveData;
     private long time;
+    private MediatorLiveData weatherErrorLiveData;
 
     public MainPtr(MainFragment mView) {
         super(mView);
@@ -38,6 +40,10 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
         HashMap<String, LiveData> stringLiveDataHashMap = new HashMap<>();
         weatherLiveData = new MediatorLiveData<>();
         stringLiveDataHashMap.put(MainEven.MAIN_GET_WEATHER_DATA, weatherLiveData);
+
+        weatherErrorLiveData = new MediatorLiveData<>();
+        stringLiveDataHashMap.put(MainEven.MAIN_GET_WEATHER_DATA_ERROR, weatherErrorLiveData);
+
         return stringLiveDataHashMap;
     }
 
@@ -56,17 +62,45 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
         }
     }
 
-    private void getLocal(){
-        Location.getLocation(BirthdayApp.getInstance(), new Location.LocalListener() {
+    private void getLocal() {
+        addSubscribe(new Observable<LocalData>() {
             @Override
-            public void onLocationChanged(LocalData localData) {
-                mModel.cityName = localData.getLocality();
-                getWeatherData();
+            protected void subscribeActual(Observer<? super LocalData> observer) {
+                LocalData mModellocalData = mModel.getLocalData();
+                if (mModellocalData == null) {
+                    mModellocalData = new LocalData();
+                }
+                observer.onNext(mModellocalData);
             }
-        });
+        }.compose(RxUtils.schedulersTransformer()).subscribe(new Consumer<LocalData>() {
+            @Override
+            public void accept(LocalData mModellocalData) throws Exception {
+
+                if (mModellocalData == null) {
+                    long getTime = mModellocalData.getGetTime();
+                    long currentTimeMillis = System.currentTimeMillis();
+                    long l = (currentTimeMillis - getTime) / TimeConstants.HOUR;
+                    if (getTime > 0 && l <= 6) {
+                        mModel.cityName = mModellocalData.getLocality();
+                        getWeatherData();
+                        return;
+                    }
+
+                }
+                Location.getLocation(BirthdayApp.getInstance(), new Location.LocalListener() {
+                    @Override
+                    public void onLocationChanged(LocalData localData) {
+                        mModel.cityName = localData.getLocality();
+                        getWeatherData();
+                    }
+                });
+            }
+        }));
+
+
     }
 
-    private void getWeatherData(){
+    private void getWeatherData() {
         addSubscribe(new Observable<BaseData>() {
             @Override
             protected void subscribeActual(Observer<? super BaseData> observer) {
@@ -76,7 +110,12 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
         }.compose(RxUtils.schedulersTransformer()).subscribe(new Consumer<BaseData>() {
             @Override
             public void accept(BaseData baseData) throws Exception {
-                weatherLiveData.setValue(baseData);
+                if (baseData.getIsOk()) {
+                    weatherLiveData.setValue(baseData);
+                } else {
+                    //weatherErrorLiveData.setValue(new Object());
+                    startContainerActivity(HomeFragment.class.getCanonicalName());
+                }
             }
         }));
     }
@@ -93,10 +132,6 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     public void accept(MainEven mainEven) throws Exception {
         String tag = mainEven.getTag();
         BaseData data = mainEven.getData();
-
-//        getData();
-
-//        rxTest();
         requestPerTest();
     }
 
@@ -163,7 +198,6 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
                         long timeMillis = System.currentTimeMillis();
                         long l = timeMillis - time;
                         Log.e(TAG, "网络请求结束：" + finalI + "\n耗时：" + l + "\n 数据为:" + baseData.print());
-//            startContainerActivity(HomeFragment.class.getCanonicalName(), bundle);
                     }));
         }
 
