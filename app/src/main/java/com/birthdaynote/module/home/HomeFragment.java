@@ -20,11 +20,13 @@ public class HomeFragment extends BDFragment<HomePtr, DefEven> {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-        BaseDataList test = arguments.getParcelable("test");
-        if (test != null) {
-            Log.e(TAG, "========>" + test.toString());
-        } else {
-            Log.e(TAG, "==test==null====>");
+        if (arguments != null) {
+            BaseDataList test = arguments.getParcelable("test");
+            if (test != null) {
+                Log.e(TAG, "========>" + test.toString());
+            } else {
+                Log.e(TAG, "==test==null====>");
+            }
         }
     }
 

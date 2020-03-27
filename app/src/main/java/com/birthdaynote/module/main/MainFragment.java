@@ -67,20 +67,18 @@ public class MainFragment extends BDFragment<MainPtr, MainEven> {
     }
 
     private void initLiveData() {
-        initWeatherDataError();
+        initUpdateTimer();
         initWeatherDataOk();
     }
 
-    private void initWeatherDataError(){
-        bindLiveData(MainEven.MAIN_GET_WEATHER_DATA_ERROR, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-
-            }
+    private void initUpdateTimer() {
+        bindLiveData(MainEven.MAIN_UPDATE_TIMER_TEXT, (Observer<Integer>) integer -> {
+            String text = String.valueOf(integer)+"秒";
+            mButton.setText(text);
         });
     }
 
-    private void initWeatherDataOk(){
+    private void initWeatherDataOk() {
         bindLiveData(MainEven.MAIN_GET_WEATHER_DATA, (Observer<BaseData>) baseData -> {
 
             if (baseData.getIsOk()) {
@@ -145,9 +143,9 @@ public class MainFragment extends BDFragment<MainPtr, MainEven> {
 
     @OnClick(R.id.back_btn)
     protected void onClick() {
-//        MainEven mainEven = new MainEven();
-//        mainEven.setTag(MainEven.MAIN_GET_WEATHER_DATA);
-//        sendEven(mainEven);
+        MainEven mainEven = new MainEven();
+        mainEven.setTag(MainEven.MAIN_GET_WEATHER_DATA);
+        sendEven(mainEven);
     }
 
 

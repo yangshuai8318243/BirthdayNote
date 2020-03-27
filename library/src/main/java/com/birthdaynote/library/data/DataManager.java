@@ -62,7 +62,16 @@ public abstract class DataManager {
      * @param type
      * @return
      */
-    public abstract <D> D getLocalData(String key, String type,Class<D> dClass);
+    public abstract <D> D getLocalData(String key, String type, Class<D> dClass);
+
+    /**
+     * 删除本地数据
+     *
+     * @param key
+     * @param type
+     * @param <D>
+     */
+    public abstract <D> void deleteData(String key, String type);
 
     public interface OnDataListener {
         void onData(DecorationData d);

@@ -2,11 +2,11 @@ package com.birthdaynote.data.entity;
 
 import java.util.List;
 
-public class Weather {
+public class Weather extends LocalDecorationData {
 
     @Override
     public String toString() {
-        return "Weather{" +
+        return super.toString() + "Weather{" +
                 "code='" + code + '\'' +
                 ", charge=" + charge +
                 ", msg='" + msg + '\'' +

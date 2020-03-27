@@ -2,20 +2,24 @@ package com.birthdaynote.module.main;
 
 
 import android.Manifest;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.birthdaynote.app.BirthdayApp;
 import com.birthdaynote.app.Location;
-import com.birthdaynote.data.entity.LocalData;
+import com.birthdaynote.data.entity.LocationData;
 import com.birthdaynote.library.data.entity.BaseData;
 import com.birthdaynote.library.mvp.MvpPresenter;
 import com.birthdaynote.library.util.RxUtils;
 import com.birthdaynote.library.util.constant.TimeConstants;
+import com.birthdaynote.module.home.HomeActivity;
 import com.birthdaynote.module.home.HomeFragment;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import io.reactivex.Observable;
@@ -28,8 +32,33 @@ import io.reactivex.functions.Consumer;
 
 public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     private MediatorLiveData<BaseData> weatherLiveData;
-    private long time;
-    private MediatorLiveData weatherErrorLiveData;
+    private MediatorLiveData<Integer> updateTimerText;
+
+    private int timerIndex = 3;
+    private Handler mTimer = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    timerIndex = timerIndex - 1;
+                    updateTimer();
+                    break;
+                case 1:
+                    break;
+            }
+        }
+    };
+
+    private void updateTimer() {
+        if (timerIndex > 0) {
+            Log.e(TAG, "=============>" + timerIndex);
+            mTimer.sendEmptyMessageDelayed(0, TimeConstants.SEC);
+            updateTimerText.setValue(timerIndex);
+        } else {
+            toView();
+        }
+    }
 
     public MainPtr(MainFragment mView) {
         super(mView);
@@ -41,8 +70,8 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
         weatherLiveData = new MediatorLiveData<>();
         stringLiveDataHashMap.put(MainEven.MAIN_GET_WEATHER_DATA, weatherLiveData);
 
-        weatherErrorLiveData = new MediatorLiveData<>();
-        stringLiveDataHashMap.put(MainEven.MAIN_GET_WEATHER_DATA_ERROR, weatherErrorLiveData);
+        updateTimerText = new MediatorLiveData<>();
+        stringLiveDataHashMap.put(MainEven.MAIN_UPDATE_TIMER_TEXT, updateTimerText);
 
         return stringLiveDataHashMap;
     }
@@ -63,41 +92,45 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     }
 
     private void getLocal() {
-        addSubscribe(new Observable<LocalData>() {
+        addSubscribe(new Observable<LocationData>() {
             @Override
-            protected void subscribeActual(Observer<? super LocalData> observer) {
-                LocalData mModellocalData = mModel.getLocalData();
-                if (mModellocalData == null) {
-                    mModellocalData = new LocalData();
+            protected void subscribeActual(Observer<? super LocationData> observer) {
+                LocationData locationData = mModel.getLocationData();
+
+                if (locationData == null) {
+                    locationData = new LocationData();
                 }
-                observer.onNext(mModellocalData);
+                observer.onNext(locationData);
             }
-        }.compose(RxUtils.schedulersTransformer()).subscribe(new Consumer<LocalData>() {
-            @Override
-            public void accept(LocalData mModellocalData) throws Exception {
+        }.compose(RxUtils.schedulersTransformer()).subscribe((Consumer<LocationData>) localData -> {
 
-                if (mModellocalData == null) {
-                    long getTime = mModellocalData.getGetTime();
-                    long currentTimeMillis = System.currentTimeMillis();
-                    long l = (currentTimeMillis - getTime) / TimeConstants.HOUR;
-                    if (getTime > 0 && l <= 6) {
-                        mModel.cityName = mModellocalData.getLocality();
-                        getWeatherData();
-                        return;
-                    }
+            if (localData.getLocality() != null && !mModel.timeMoreThanTheKey(localData.getTime(), 6)) {
+                mModel.cityName = localData.getLocality();
+                getWeatherData();
+                return;
+            }
 
-                }
-                Location.getLocation(BirthdayApp.getInstance(), new Location.LocalListener() {
+            Location.getLocation(BirthdayApp.getInstance(), locationData -> {
+                mModel.cityName = locationData.getLocality();
+
+                addSubscribe(new Observable<LocationData>() {
                     @Override
-                    public void onLocationChanged(LocalData localData) {
-                        mModel.cityName = localData.getLocality();
-                        getWeatherData();
+                    protected void subscribeActual(Observer<? super LocationData> observer) {
+                        mModel.saveLocationData(locationData);
                     }
-                });
-            }
+                }.compose(RxUtils.schedulersTransformer()).subscribe((Consumer) -> {
+                }));
+
+                getWeatherData();
+            });
         }));
 
 
+    }
+
+    private void toView() {
+        startActivity(HomeActivity.class);
+        finishActivity();
     }
 
     private void getWeatherData() {
@@ -107,15 +140,12 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
                 BaseData weatherData = mModel.getWeatherData();
                 observer.onNext(weatherData);
             }
-        }.compose(RxUtils.schedulersTransformer()).subscribe(new Consumer<BaseData>() {
-            @Override
-            public void accept(BaseData baseData) throws Exception {
-                if (baseData.getIsOk()) {
-                    weatherLiveData.setValue(baseData);
-                } else {
-                    //weatherErrorLiveData.setValue(new Object());
-                    startContainerActivity(HomeFragment.class.getCanonicalName());
-                }
+        }.compose(RxUtils.schedulersTransformer()).subscribe((Consumer<BaseData>) baseData -> {
+            if (baseData.getIsOk()) {
+                weatherLiveData.setValue(baseData);
+                updateTimer();
+            } else {
+                toView();
             }
         }));
     }
@@ -132,7 +162,8 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     public void accept(MainEven mainEven) throws Exception {
         String tag = mainEven.getTag();
         BaseData data = mainEven.getData();
-        requestPerTest();
+//        requestPerTest();
+//        delet();
     }
 
     private void requestPerTest() {
@@ -144,6 +175,7 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
         super.onCreate();
         requestPerTest();
     }
+
 
     private void rxTest() {
         Observable<Object> compose = new Observable<String>() {
@@ -173,33 +205,4 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     }
 
 
-    private void getData() {
-        time = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
-            int finalI = i;
-            addSubscribe(new Observable<BaseData>() {
-                @Override
-                protected void subscribeActual(Observer<? super BaseData> observer) {
-//                BaseData imageData = mModel.getImageData();
-//                BaseData imageData = mModel.getPost();
-
-                    observer.onComplete();
-                }
-            }.compose(RxUtils.schedulersTransformer())
-                    .doOnSubscribe(new Consumer<Disposable>() {
-                        @Override
-                        public void accept(Disposable disposable) throws Exception {
-                            Log.e(TAG, "网络请求开始：" + finalI);
-                        }
-                    }).subscribe((Consumer<BaseData>) baseData -> {
-//                        weatherLiveData.setValue("xxxxxxxxxxxxxxaaaaaaaaaaaaaaaaaaaaaa");
-
-
-                        long timeMillis = System.currentTimeMillis();
-                        long l = timeMillis - time;
-                        Log.e(TAG, "网络请求结束：" + finalI + "\n耗时：" + l + "\n 数据为:" + baseData.print());
-                    }));
-        }
-
-    }
 }

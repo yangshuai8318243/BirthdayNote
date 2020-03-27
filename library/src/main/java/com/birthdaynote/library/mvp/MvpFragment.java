@@ -55,6 +55,14 @@ public abstract class MvpFragment<P extends PresenterInterface, E extends EvenIn
                 requestPermissions(permissions);
             }
         });
+
+        mBindLiveData.bindLiveData(EvenConstants.FINISH_ACTIVITY_PTR_TAG, new Observer<MvpData>() {
+            @Override
+            public void onChanged(MvpData mvpData) {
+                getActivity().finish();
+            }
+        });
+
     }
 
     @Override

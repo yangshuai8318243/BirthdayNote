@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.birthdaynote.data.entity.LocalData;
+import com.birthdaynote.data.entity.LocationData;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +23,7 @@ public class Location {
 
         LocationListener locationListener = new LocationListener() {
 //            private StringBuilder stringBuilder = new StringBuilder();
-            private LocalData localData = new LocalData();
+            private LocationData localData = new LocationData();
             @Override
             public void onLocationChanged(android.location.Location location) {
 
@@ -105,6 +105,6 @@ public class Location {
 
 
     public static interface LocalListener {
-        void onLocationChanged(LocalData localData);
+        void onLocationChanged(LocationData locationData);
     }
 }

@@ -9,6 +9,14 @@ public interface EvenConstants {
      * 启动容器Activity统一事件
      */
     String START_CANONICAL_PTR_TAG = "START_CANONICAL_PTR_TAG";
+
+
+    /**
+     * 关闭Activity统一事件
+     */
+    String FINISH_ACTIVITY_PTR_TAG = "FINISH_ACTIVITY_PTR_TAG";
+
+
     /**
      * 权限申请统一事件
      */

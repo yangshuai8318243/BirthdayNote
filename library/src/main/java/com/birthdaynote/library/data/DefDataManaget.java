@@ -74,5 +74,10 @@ public class DefDataManaget extends DataManager {
         return mLocalDataManager.getData(key, type, dClass);
     }
 
+    @Override
+    public <D> void deleteData(String key, String type) {
+        mLocalDataManager.deleteData(key, type);
+    }
+
 
 }

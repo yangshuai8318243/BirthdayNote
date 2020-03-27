@@ -1,6 +1,6 @@
 package com.birthdaynote.data.entity;
 
-public class LocalData {
+public class LocationData extends LocalDecorationData {
     /**
      * 国家名称
      */
@@ -22,18 +22,6 @@ public class LocalData {
      */
     String featureName;
 
-    /**
-     * 获取时间戳
-     */
-    long getTime = -1;
-
-    public long getGetTime() {
-        return getTime;
-    }
-
-    public void setGetTime(long getTime) {
-        this.getTime = getTime;
-    }
 
     public String getCountryName() {
         return countryName;
@@ -77,7 +65,7 @@ public class LocalData {
 
     @Override
     public String toString() {
-        return "LocalData{" +
+        return super.toString() + "LocalData{" +
                 "countryName='" + countryName + '\'' +
                 ", adminArea='" + adminArea + '\'' +
                 ", locality='" + locality + '\'' +

@@ -48,6 +48,7 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
                 startContainerActivity(fragmentName, bundle);
             }
         });
+
         mBindLiveData.bindLiveData(EvenConstants.REQUEST_PERMISSIONS, new Observer<MvpData>() {
             @Override
             public void onChanged(MvpData mvpData) {
@@ -55,12 +56,20 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
                 requestPermissions(permissions);
             }
         });
+
+        mBindLiveData.bindLiveData(EvenConstants.FINISH_ACTIVITY_PTR_TAG, new Observer<MvpData>() {
+            @Override
+            public void onChanged(MvpData mvpData) {
+                finish();
+            }
+        });
+
     }
 
     @Override
     public void onFailurePermissions(String permission) {
         super.onFailurePermissions(permission);
-        if (mPtr != null){
+        if (mPtr != null) {
 
             mPtr.onFailurePermissions(permission);
         }
@@ -69,7 +78,7 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
     @Override
     public void onSuccessPermissions(String permission) {
         super.onSuccessPermissions(permission);
-        if (mPtr != null){
+        if (mPtr != null) {
             mPtr.onSuccessPermissions(permission);
         }
     }

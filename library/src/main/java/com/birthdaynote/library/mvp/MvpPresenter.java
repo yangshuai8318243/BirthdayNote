@@ -39,6 +39,7 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
     private MediatorLiveData<MvpData> mStartActivityLive;
     private MediatorLiveData<MvpData> mStartCanonicalActivityLive;
     private MediatorLiveData<MvpData> mRequestPermission;
+    private MediatorLiveData<MvpData> mFinishActivity;
 
     public MvpPresenter(V view) {
         TAG = getClass().getName();
@@ -113,11 +114,23 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
     private void bindStarActivityEven() {
         checkLiveDataMap();
         mStartActivityLive = new MediatorLiveData<>();
-        mStartCanonicalActivityLive = new MediatorLiveData<>();
-        mRequestPermission = new MediatorLiveData<>();
         mLiveDataMap.put(EvenConstants.START_ACTIVIT_PTR_TAG, mStartActivityLive);
+
+        mStartCanonicalActivityLive = new MediatorLiveData<>();
         mLiveDataMap.put(EvenConstants.START_CANONICAL_PTR_TAG, mStartCanonicalActivityLive);
+
+        mRequestPermission = new MediatorLiveData<>();
         mLiveDataMap.put(EvenConstants.REQUEST_PERMISSIONS, mRequestPermission);
+
+        mFinishActivity = new MediatorLiveData<>();
+        mLiveDataMap.put(EvenConstants.FINISH_ACTIVITY_PTR_TAG, mFinishActivity);
+    }
+
+    /**
+     * 关闭当前Activity
+     */
+    protected void finishActivity() {
+        mFinishActivity.setValue(new MvpData());
     }
 
     /**

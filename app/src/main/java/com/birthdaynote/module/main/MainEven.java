@@ -7,6 +7,9 @@ public class MainEven implements EvenInterface<BaseData> {
     public static final String MAIN_GET_IMAGE_DATA = "MAIN_GET_IMAGE_DATA";
     public static final String MAIN_GET_WEATHER_DATA = "MAIN_GET_WEATHER_DATA";
     public static final String MAIN_GET_WEATHER_DATA_ERROR = "MAIN_GET_WEATHER_DATA_ERROR";
+    public static final String MAIN_UPDATE_TIMER_TEXT = "MAIN_UPDATE_TIMER_TEXT";
+
+
     private String mTag = "";
     private BaseData mDefultData = new BaseData.Builder().build();
 
