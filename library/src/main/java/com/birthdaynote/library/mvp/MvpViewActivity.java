@@ -70,7 +70,6 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
     public void onFailurePermissions(String permission) {
         super.onFailurePermissions(permission);
         if (mPtr != null) {
-
             mPtr.onFailurePermissions(permission);
         }
     }

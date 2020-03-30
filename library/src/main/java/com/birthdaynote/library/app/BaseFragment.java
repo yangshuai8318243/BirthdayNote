@@ -1,6 +1,5 @@
 package com.birthdaynote.library.app;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -37,7 +36,35 @@ public class BaseFragment extends Fragment implements PermissionsListener {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    protected void addFragment(Class<Fragment> fragmentClass, int viewId) {
+    /**
+     * 添加Fragment
+     *
+     * @param fragmentClass
+     * @param viewId
+     * @param <F>
+     */
+    protected <F extends Fragment> void addFragment(Class<F> fragmentClass, int viewId) {
+        addFragment(fragmentClass, viewId, fragmentClass.getName());
+    }
+
+    /**
+     * 添加Fragment
+     * @param fragment
+     * @param viewId
+     */
+    protected void addFragment(Fragment fragment, int viewId) {
+        addFragment(fragment, viewId, fragment.getClass().getName());
+    }
+
+    /**
+     * 添加Fragment
+     *
+     * @param fragmentClass
+     * @param viewId
+     * @param tag
+     * @param <F>
+     */
+    protected <F extends Fragment> void addFragment(Class<F> fragmentClass, int viewId, String tag) {
         Fragment baseFragment = null;
         try {
             baseFragment = fragmentClass.newInstance();
@@ -48,13 +75,84 @@ public class BaseFragment extends Fragment implements PermissionsListener {
         }
 
         if (baseFragment != null) {
-            addFragment(baseFragment, viewId);
+            addFragment(baseFragment, viewId, tag);
         } else {
             throw new RuntimeException("baseFragment is Null");
         }
     }
 
-    protected void addFragment(Fragment fragment, int viewId) {
+    /**
+     * 添加Fragment
+     *
+     * @param fragment
+     * @param viewId
+     * @param tag
+     */
+    protected void addFragment(Fragment fragment, int viewId, String tag) {
+        if (fragment != null) {
+            FragmentTransaction trans = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            trans.add(viewId, fragment, tag);
+            trans.commitAllowingStateLoss();
+        } else {
+            throw new RuntimeException("baseFragment is Null");
+        }
+    }
+
+    /**
+     * 显示Fragment
+     *
+     * @param fragment
+     */
+    protected void shwoFragment(Fragment fragment) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.show(fragment);
+        transaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * 隐藏Fragment
+     *
+     * @param fragment
+     */
+    protected void hideFragment(Fragment fragment) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.hide(fragment);
+        transaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * 替换Fragment
+     *
+     * @param fragmentClass
+     * @param viewId
+     * @param <F>
+     */
+    protected <F extends Fragment> void replaceFragment(Class<F> fragmentClass, int viewId, String tag) {
+        Fragment baseFragment = null;
+        try {
+            baseFragment = fragmentClass.newInstance();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        if (baseFragment != null) {
+            replaceFragment(baseFragment, viewId);
+        } else {
+            throw new RuntimeException("baseFragment is Null");
+        }
+    }
+
+
+    /**
+     * 替换Fragment
+     *
+     * @param fragment
+     * @param viewId
+     */
+    protected void replaceFragment(Fragment fragment, int viewId) {
         if (fragment != null) {
             FragmentTransaction trans = getActivity().getSupportFragmentManager()
                     .beginTransaction();
@@ -64,6 +162,7 @@ public class BaseFragment extends Fragment implements PermissionsListener {
             throw new RuntimeException("baseFragment is Null");
         }
     }
+
 
     /**
      * 跳转页面

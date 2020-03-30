@@ -45,10 +45,14 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
                     updateTimer();
                     break;
                 case 1:
+                    mTimer.removeMessages(0);
+                    timerIndex = -1;
+                    updateTimer();
                     break;
             }
         }
     };
+
 
     private void updateTimer() {
         if (timerIndex > 0) {
@@ -164,6 +168,7 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
         BaseData data = mainEven.getData();
 //        requestPerTest();
 //        delet();
+        mTimer.sendEmptyMessage(1);
     }
 
     private void requestPerTest() {

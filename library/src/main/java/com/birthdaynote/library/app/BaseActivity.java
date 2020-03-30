@@ -117,7 +117,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         }
     }
 
-
     /**
      * 添加Fragment
      *
@@ -126,6 +125,27 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
      * @param <F>
      */
     protected <F extends Fragment> void addFragment(Class<F> fragmentClass, int viewId) {
+        addFragment(fragmentClass, viewId, fragmentClass.getName());
+    }
+
+    /**
+     * 添加Fragment
+     *
+     * @param fragment
+     * @param viewId
+     */
+    protected void addFragment(Fragment fragment, int viewId) {
+        addFragment(fragment, viewId, fragment.getClass().getName());
+    }
+
+    /**
+     * 添加Fragment
+     *
+     * @param fragmentClass
+     * @param viewId
+     * @param <F>
+     */
+    protected <F extends Fragment> void addFragment(Class<F> fragmentClass, int viewId, String tag) {
         Fragment baseFragment = null;
         try {
             baseFragment = fragmentClass.newInstance();
@@ -136,7 +156,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         }
 
         if (baseFragment != null) {
-            addFragment(baseFragment, viewId);
+            addFragment(baseFragment, viewId, tag);
         } else {
             throw new RuntimeException("baseFragment is Null");
         }
@@ -148,7 +168,49 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
      * @param fragment
      * @param viewId
      */
-    protected void addFragment(Fragment fragment, int viewId) {
+    protected void addFragment(Fragment fragment, int viewId, String tag) {
+        if (fragment != null) {
+            FragmentTransaction trans = getSupportFragmentManager()
+                    .beginTransaction();
+            trans.add(viewId, fragment, tag);
+            trans.commitAllowingStateLoss();
+        } else {
+            throw new RuntimeException("baseFragment is Null");
+        }
+    }
+
+    /**
+     * 替换Fragment
+     *
+     * @param fragmentClass
+     * @param viewId
+     * @param <F>
+     */
+    protected <F extends Fragment> void replaceFragment(Class<F> fragmentClass, int viewId, String tag) {
+        Fragment baseFragment = null;
+        try {
+            baseFragment = fragmentClass.newInstance();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        if (baseFragment != null) {
+            replaceFragment(baseFragment, viewId);
+        } else {
+            throw new RuntimeException("baseFragment is Null");
+        }
+    }
+
+
+    /**
+     * 替换Fragment
+     *
+     * @param fragment
+     * @param viewId
+     */
+    protected void replaceFragment(Fragment fragment, int viewId) {
         if (fragment != null) {
             FragmentTransaction trans = getSupportFragmentManager()
                     .beginTransaction();
@@ -158,6 +220,30 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
             throw new RuntimeException("baseFragment is Null");
         }
     }
+
+
+    /**
+     * 显示Fragment
+     *
+     * @param fragment
+     */
+    protected void shwoFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.show(fragment);
+        transaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * 隐藏Fragment
+     *
+     * @param fragment
+     */
+    protected void hideFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.hide(fragment);
+        transaction.commitAllowingStateLoss();
+    }
+
 
     /**
      * 跳转页面
