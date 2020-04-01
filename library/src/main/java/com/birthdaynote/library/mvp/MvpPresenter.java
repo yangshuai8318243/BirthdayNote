@@ -88,7 +88,7 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
      */
     @Override
     public void bindViewLiveData(LifecycleOwner owner, String tag, Observer observer) {
-        Log.e(TAG, "----------bindViewLiveData------>" + tag);
+//        Log.e(TAG, "----------bindViewLiveData------>" + tag);
 
         checkLiveDataMap();
         LiveData liveData = mLiveDataMap.get(tag);

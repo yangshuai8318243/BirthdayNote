@@ -32,7 +32,7 @@ public class MainModel extends MvpModel<BaseData> {
 
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("city", cityName);
-        hashMap.put("appkey", APP_KEY.WEATHER_APPKEY);
+        hashMap.put("appkey", APP_KEY.JING_DONG_API_KEY);
 
         Weather weather = SingleDataManager.getDataManager().getLocalData(WEATHER_SAVE_KEY, WEATHER_SAVE_TYPE, Weather.class);
         DecorationData synchronizeData;

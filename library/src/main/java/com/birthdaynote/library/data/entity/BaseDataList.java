@@ -5,13 +5,60 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BaseDataList implements Parcelable {
     private static final String TAG = "BaseDataList";
     private static final int CURRENT_PARCEL_VERSION = 1; // 当前序列化格式的版本号
     private List<BaseData> mDataList = new ArrayList<>();
+    private Integer errorCode;
+    private Boolean isOk;
+    private String message;
 
+    private BaseDataList(Builder builder) {
+        setErrorCode(builder.errorCode);
+        isOk = builder.isOk;
+        setMessage(builder.message);
+    }
+
+    public void addAll(List<BaseData> list) {
+        if (list == null || list.size() == 0) {
+            Log.e(TAG, " == 添加数据为空 ==");
+            return;
+        }
+
+        mDataList.addAll(list);
+    }
+
+    public List<BaseData> getDataList() {
+        ArrayList<BaseData> baseData = new ArrayList<>(mDataList);
+        return baseData;
+    }
+
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public Boolean getOk() {
+        return isOk;
+    }
+
+    public void setOk(Boolean ok) {
+        isOk = ok;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public BaseData getData(int key) {
         BaseData baseData = mDataList.get(key);
@@ -49,6 +96,23 @@ public class BaseDataList implements Parcelable {
         return "BaseDataList{" +
                 "mDataMap=" + mDataList +
                 '}';
+    }
+
+    public String printDetailedData() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("BaseDataList{")
+                .append('\n')
+                .append("mDataMap=");
+        for (int i = 0; i < mDataList.size(); i++) {
+            BaseData baseData = mDataList.get(i);
+            stringBuilder
+                    .append("\n")
+                    .append("index = ")
+                    .append(i)
+                    .append(" data = ")
+                    .append(baseData.print(true, false));
+        }
+        return stringBuilder.toString();
     }
 
     @Override
@@ -121,4 +185,32 @@ public class BaseDataList implements Parcelable {
             return new BaseDataList[size];
         }
     };
+
+    public static final class Builder {
+        private Integer errorCode = -1;
+        private Boolean isOk = true;
+        private String message = "";
+
+        public Builder() {
+        }
+
+        public Builder errorCode(Integer val) {
+            errorCode = val;
+            return this;
+        }
+
+        public Builder isOk(Boolean val) {
+            isOk = val;
+            return this;
+        }
+
+        public Builder message(String val) {
+            message = val;
+            return this;
+        }
+
+        public BaseDataList build() {
+            return new BaseDataList(this);
+        }
+    }
 }

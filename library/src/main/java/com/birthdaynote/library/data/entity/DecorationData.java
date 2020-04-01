@@ -28,6 +28,9 @@ public class DecorationData extends Exception {
         return mesage;
     }
 
+    public boolean isOk() {
+        return this.code == DEF_CODE;
+    }
 
     public static final class Builder {
         private int code = DEF_CODE;

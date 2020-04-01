@@ -364,17 +364,24 @@ public class BaseData implements Parcelable {
                 .append("\n").toString();
         String s1 = "BaseData{" +
                 "mInt=" + errorCode +
+                "\n" +
                 ", mLong=" + mLong +
+                 "\n" +
                 ", mDouble=" + mDouble +
+                "\n" +
                 ", mBoolean=" + isOk +
+                "\n" +
                 ", mSimpleMapData=" + mSimpleMapData +
+                "\n" +
                 ", mStr='" + message + '\'';
         if (isSimple) {
             s1 = s1 + "}";
         } else {
             s1 = s1 +
                     ", mVarClassName=" + mVarClassName +
+                    "\n" +
                     ", mSimpleMapData=" + mSimpleMapData +
+                    "\n" +
                     '}';
         }
 
