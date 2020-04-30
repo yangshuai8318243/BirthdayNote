@@ -2,6 +2,7 @@ package com.birthdaynote.module.news;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 
 public class NewsFragment extends BDFragment<NewsPtr, NewsEven> {
-
     @BindView(R.id.news_list)
     RecyclerView newsList;
 
@@ -40,6 +40,8 @@ public class NewsFragment extends BDFragment<NewsPtr, NewsEven> {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.e(TAG,"---NewsFragment------------onCreateView-------------->");
+
         View inflate = inflater.inflate(R.layout.news_fragment_layout, container, false);
         bindView(inflate);
         return inflate;

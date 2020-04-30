@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:visibility="gone">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/weather_image"
                 android:layout_width="200dp"
                 android:layout_height="200dp"

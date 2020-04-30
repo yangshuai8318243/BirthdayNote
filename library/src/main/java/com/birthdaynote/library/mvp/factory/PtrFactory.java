@@ -18,20 +18,20 @@ public class PtrFactory implements PtrFactoryInterface {
         try {
             return (P) ptr.getConstructor(viewInterface.getClass()).newInstance(viewInterface);
         } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-            Log.e("PtrFactory",e.getMessage());
+            e.printStackTrace();
+//            Log.e("PtrFactory",e.getMessage());
 
         } catch (InstantiationException e) {
-//            e.printStackTrace();
-            Log.e("PtrFactory",e.getMessage());
+            e.printStackTrace();
+//            Log.e("PtrFactory",e.getMessage());
 
         } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-            Log.e("PtrFactory",e.getMessage());
+            e.printStackTrace();
+//            Log.e("PtrFactory",e.getMessage());
 
         } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-            Log.e("PtrFactory",e.getMessage());
+            e.printStackTrace();
+//            Log.e("PtrFactory",e.getMessage());
         }
         throw new RuntimeException("please inherit PresenterInterface");
     }

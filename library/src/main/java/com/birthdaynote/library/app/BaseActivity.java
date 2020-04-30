@@ -1,6 +1,7 @@
 package com.birthdaynote.library.app;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.nfc.Tag;
@@ -25,8 +26,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
     protected static String TAG = "";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
         TAG = this.getClass().getName();
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 

@@ -1,8 +1,6 @@
 package com.birthdaynote.library.mvp;
 
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -11,15 +9,10 @@ import com.birthdaynote.library.mvp.even.EvenConstants;
 import com.birthdaynote.library.mvp.even.EvenInterface;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;

@@ -38,7 +38,7 @@ dependencies {
     api 'io.reactivex.rxjava2:rxjava:2.1.1'
     api 'com.google.code.gson:gson:2.8.5'
 
-
+//    Android room框架
     def room_version = "2.1.0-alpha03"
 
     implementation "androidx.room:room-runtime:$room_version"
@@ -56,4 +56,6 @@ dependencies {
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
 
+//    美团路由框架
+    api 'com.sankuai.waimai.router:router:1.2.0'
 }

@@ -1,5 +1,6 @@
 package com.birthdaynote.module.news;
 
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.birthdaynote.library.data.entity.BaseData;

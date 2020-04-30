@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.birthdaynote.R;
 import com.birthdaynote.app.BDFragment;
 import com.birthdaynote.library.data.entity.BaseData;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +30,7 @@ public class MainFragment extends BDFragment<MainPtr, MainEven> {
     ImageView mImageView;
 
     @BindView(R.id.weather_image)
-    ImageView weather_image;
+    SimpleDraweeView weather_image;
 
     @BindView(R.id.weather_layout)
     RelativeLayout weather_layout;

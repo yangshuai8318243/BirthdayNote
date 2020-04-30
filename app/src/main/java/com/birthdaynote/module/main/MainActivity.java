@@ -1,6 +1,8 @@
 package com.birthdaynote.module.main;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.birthdaynote.R;
 import com.birthdaynote.app.BDActivity;
@@ -11,7 +13,6 @@ import butterknife.Unbinder;
 
 
 public class MainActivity extends BDActivity {
-
     @Override
     protected Unbinder binderView() {
         return null;
@@ -19,6 +20,8 @@ public class MainActivity extends BDActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity","---MainActivity------------onCreate-------------->");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         addFragment(MainFragment.class,R.id.main_container);

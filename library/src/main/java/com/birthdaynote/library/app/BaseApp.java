@@ -4,11 +4,13 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 
-public class BaseApp extends Application{
+public class BaseApp extends Application {
     private static Application sInstance;
+    public static String TAG = "";
 
     @Override
     public void onCreate() {
+        TAG = getClass().getName();
         super.onCreate();
         setApplication(this);
     }

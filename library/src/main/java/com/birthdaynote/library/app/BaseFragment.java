@@ -1,5 +1,6 @@
 package com.birthdaynote.library.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -25,8 +26,13 @@ public class BaseFragment extends Fragment implements PermissionsListener {
     private static final String BASE_TAG = "BaseFragment";
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onAttach(Context context) {
         TAG = this.getClass().getName();
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 

@@ -1,6 +1,7 @@
 package com.birthdaynote.app;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 
 import com.birthdaynote.library.mvp.even.EvenInterface;
 import com.birthdaynote.library.mvp.MvpViewActivity;
@@ -27,5 +28,10 @@ public abstract class BDActivity<P extends PresenterInterface,E extends EvenInte
             mUnbinder.unbind();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
     }
 }

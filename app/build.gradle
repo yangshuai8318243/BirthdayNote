@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
-
+// 应用WMRouter插件
+apply plugin: 'WMRouter'
 android {
     compileSdkVersion 29
     defaultConfig {
@@ -9,6 +10,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("Boolean","isBuildModule","${isBuildModule.toBoolean()}")
+        buildConfigField("Boolean","isDebug","true")
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -28,11 +31,23 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(':library')
+
+    if (isBuildModule.toBoolean()) {
+        implementation project(':library')
+    } else {
+        implementation project(':testmodule')
+    }
+
 //    annotationProcessor project(':lib-compiler')
+//    动态绑定view butterknife
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
+    //    图片加载框架fresco
+    implementation 'com.facebook.fresco:fresco:0.12.0'
+    //    图片加载框架fresco 动图
+    implementation 'com.facebook.fresco:animated-gif:0.12.0'
 //    implementation 'com.squareup:javapoet:1.11.1'
+    annotationProcessor 'com.sankuai.waimai.router:compiler:1.2.0'
 
 }
