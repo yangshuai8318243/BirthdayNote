@@ -12,6 +12,7 @@ import com.birthdaynote.library.mvp.factory.PtrFactoryInterface;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -68,7 +69,7 @@ public abstract class MvpFragment<P extends PresenterInterface, E extends EvenIn
     @Override
     public void onFailurePermissions(String permission) {
         super.onFailurePermissions(permission);
-        if (mPtr != null){
+        if (mPtr != null) {
             mPtr.onFailurePermissions(permission);
         }
     }
@@ -76,7 +77,7 @@ public abstract class MvpFragment<P extends PresenterInterface, E extends EvenIn
     @Override
     public void onSuccessPermissions(String permission) {
         super.onSuccessPermissions(permission);
-        if (mPtr != null){
+        if (mPtr != null) {
             mPtr.onSuccessPermissions(permission);
         }
     }
@@ -153,7 +154,9 @@ public abstract class MvpFragment<P extends PresenterInterface, E extends EvenIn
 
     protected class BindLiveData {
         public void bindLiveData(String tag, Observer observer) {
-            mPtr.bindViewLiveData(MvpFragment.this, tag, observer);
+            if (mPtr != null) {
+                mPtr.bindViewLiveData(MvpFragment.this, tag, observer);
+            }
         }
     }
 
