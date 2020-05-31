@@ -1,5 +1,6 @@
 package com.birthdaynote.library.mvp;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-public class ContainerActivity<P extends PresenterInterface,E extends EvenInterface> extends MvpViewActivity<P,E>{
+public class ContainerActivity<P extends PresenterInterface, E extends EvenInterface> extends MvpViewActivity<P, E> {
     public static final String FRAGMENT = "fragment";
+    public static final String ACTIVITY_NAME = "ActivityName";
     public static final String BUNDLE = "bundle";
 
     private static final String FRAGMENT_TAG = "content_fragment_tag";
@@ -32,9 +34,10 @@ public class ContainerActivity<P extends PresenterInterface,E extends EvenInterf
         if (fragment == null) {
             fragment = initFromIntent(getIntent());
         }
-
-        addFragment(fragment,R.id.container);
-        mFragment = new WeakReference<>(fragment);
+        if (fragment != null) {
+            addFragment(fragment, R.id.container);
+            mFragment = new WeakReference<>(fragment);
+        }
     }
 
 
@@ -45,6 +48,17 @@ public class ContainerActivity<P extends PresenterInterface,E extends EvenInterf
         }
         try {
             String fragmentName = data.getStringExtra(FRAGMENT);
+            String name = data.getStringExtra(ACTIVITY_NAME);
+            ActionBar actionBar = getActionBar();
+            androidx.appcompat.app.ActionBar supportActionBar = getSupportActionBar();
+
+            if (actionBar != null && name != null) {
+                actionBar.setTitle(name);
+            }
+
+            if (supportActionBar != null && name != null) {
+                supportActionBar.setTitle(name);
+            }
 
             if (fragmentName == null || "".equals(fragmentName)) {
                 throw new IllegalArgumentException("can not find page fragmentName");

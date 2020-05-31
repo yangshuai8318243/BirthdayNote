@@ -11,11 +11,17 @@
         android:layout_height="50dp"
         android:text="运行算法" />
 
-    <TextView
-        android:id="@+id/algorithm_text"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="20dp"
-        android:textSize="18sp"
-        tools:text="ssssssssssssssssssssssssss" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/algorithm_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="20dp"
+            android:textSize="18sp"
+            tools:text="ssssssssssssssssssssssssss" />
+
+    </ScrollView>
 </LinearLayout>

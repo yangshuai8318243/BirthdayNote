@@ -55,6 +55,7 @@ public class BaseFragment extends Fragment implements PermissionsListener {
 
     /**
      * 添加Fragment
+     *
      * @param fragment
      * @param viewId
      */
@@ -272,7 +273,26 @@ public class BaseFragment extends Fragment implements PermissionsListener {
      * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
      */
     public void startContainerActivity(String canonicalName) {
-        startContainerActivity(canonicalName, null);
+        startContainerActivity(canonicalName, null, null);
+    }
+
+    /**
+     * 跳转容器页面
+     *
+     * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
+     * @param activityName  需要显示的ActivityName
+     */
+    public void startContainerActivity(String canonicalName, String activityName) {
+        startContainerActivity(canonicalName, null, activityName);
+    }
+
+    /**
+     * 跳转容器页面
+     *
+     * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
+     */
+    public void startContainerActivity(String canonicalName, Bundle bundle) {
+        startContainerActivity(canonicalName, bundle, null);
     }
 
     /**
@@ -281,11 +301,13 @@ public class BaseFragment extends Fragment implements PermissionsListener {
      * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
      * @param bundle        跳转所携带的信息
      */
-    public void startContainerActivity(String canonicalName, Bundle bundle) {
+    public void startContainerActivity(String canonicalName, Bundle bundle, String activityName) {
         Intent intent = new Intent(getContext(), ContainerActivity.class);
-        Log.e(TAG, "====fragmentName=canonicalName=>" + canonicalName);
-
+        Log.e(TAG, "===canonicalName===>" + canonicalName);
         intent.putExtra(ContainerActivity.FRAGMENT, canonicalName);
+        if (activityName != null) {
+            intent.putExtra(ContainerActivity.ACTIVITY_NAME, activityName);
+        }
         if (bundle != null) {
             intent.putExtra(ContainerActivity.BUNDLE, bundle);
         }

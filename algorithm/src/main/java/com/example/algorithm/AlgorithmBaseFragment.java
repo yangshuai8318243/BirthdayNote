@@ -13,9 +13,13 @@ import androidx.annotation.Nullable;
 import com.birthdaynote.library.mvp.MvpFragment;
 import com.birthdaynote.library.mvp.PresenterInterface;
 
-public abstract class BaseFragment extends MvpFragment {
+import java.util.Arrays;
+import java.util.Random;
+
+public abstract class AlgorithmBaseFragment extends MvpFragment {
     protected Button runBtn;
     protected TextView textView;
+    protected Random random;
 
     @Nullable
     @Override
@@ -34,6 +38,8 @@ public abstract class BaseFragment extends MvpFragment {
                 run();
             }
         });
+        random = new Random();
+
     }
 
     protected abstract void run();
@@ -41,5 +47,15 @@ public abstract class BaseFragment extends MvpFragment {
     @Override
     protected PresenterInterface initPtr() {
         return null;
+    }
+
+
+    protected int[] getRIntArray(int size) {
+        int[] scr = new int[size];
+        for (int i = 0; i < size; i++) {
+            int i2 = random.nextInt(scr.length - 1);
+            scr[i] = i2;
+        }
+        return Arrays.copyOfRange(scr, 0, scr.length);
     }
 }

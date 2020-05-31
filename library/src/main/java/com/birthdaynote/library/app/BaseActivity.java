@@ -280,7 +280,26 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
      * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
      */
     public void startContainerActivity(String canonicalName) {
-        startContainerActivity(canonicalName, null);
+        startContainerActivity(canonicalName, null, null);
+    }
+
+    /**
+     * 跳转容器页面
+     *
+     * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
+     */
+    public void startContainerActivity(String canonicalName, Bundle bundle) {
+        startContainerActivity(canonicalName, bundle, null);
+    }
+
+    /**
+     * 跳转容器页面
+     *
+     * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
+     * @param activityName  需要显示的ActivityName
+     */
+    public void startContainerActivity(String canonicalName, String activityName) {
+        startContainerActivity(canonicalName, null, activityName);
     }
 
     /**
@@ -289,10 +308,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
      * @param canonicalName 规范名 : Fragment.class.getCanonicalName()
      * @param bundle        跳转所携带的信息
      */
-    public void startContainerActivity(String canonicalName, Bundle bundle) {
+    public void startContainerActivity(String canonicalName, Bundle bundle, String activityName) {
         Intent intent = new Intent(this, ContainerActivity.class);
-        Log.e(TAG, "===canonicalName===>" + canonicalName);
         intent.putExtra(ContainerActivity.FRAGMENT, canonicalName);
+        if (activityName != null) {
+            intent.putExtra(ContainerActivity.ACTIVITY_NAME, activityName);
+        }
         if (bundle != null) {
             intent.putExtra(ContainerActivity.BUNDLE, bundle);
         }
