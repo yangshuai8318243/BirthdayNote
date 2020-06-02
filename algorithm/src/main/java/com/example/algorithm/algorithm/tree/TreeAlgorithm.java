@@ -18,12 +18,19 @@ public class TreeAlgorithm extends AlgorithmBaseFragment {
         Log.e(TAG, "----------size-------->\n" + size);
     }
 
+
+    /**
+     * 翻转一个二叉树
+     *
+     * @param treeNode
+     */
     private void Mirror(TreeNode treeNode) {
         if (treeNode == null) {
             return;
         }
-
+        //先翻转
         swap(treeNode);
+        //再深入
         Mirror(treeNode.leftChild);
         Mirror(treeNode.rightChild);
 
@@ -40,10 +47,15 @@ public class TreeAlgorithm extends AlgorithmBaseFragment {
         return height(root);
     }
 
+    /**
+     * 查一个二叉树的高度
+     * @param treeNode
+     * @return
+     */
     private int height(TreeNode treeNode) {
         if (treeNode == null) {
             return 0;
-        }else {
+        } else {
             int leftSize = height(treeNode.leftChild) + 1;
             int rightSize = height(treeNode.rightChild) + 1;
             return Math.max(leftSize, rightSize);

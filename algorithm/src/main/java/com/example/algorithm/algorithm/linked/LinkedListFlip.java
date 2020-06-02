@@ -73,7 +73,7 @@ public class LinkedListFlip extends AlgorithmBaseFragment {
         if (tobeDelete.next != null) {
             // 要删除的节点不是尾节点
             Node next = tobeDelete.next;
-//            tobeDelete.val = next.val;
+            tobeDelete.val = next.val;
             tobeDelete.next = next.next;
         } else {
             if (head == tobeDelete)
