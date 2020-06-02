@@ -94,12 +94,19 @@ public class FindMaxCountWord {
 
     }
 
-
+    /**
+     * 找出数组中最小的 top k
+     *
+     * @param input
+     * @param k
+     * @return
+     */
     public List<Integer> solutionByHeap(int[] input, int k) {
         List<Integer> list = new ArrayList<>();
         if (k > input.length || k == 0) {
             return list;
         }
+        //自然排序队列
         Queue<Integer> queue = new PriorityQueue<>();
         for (int num : input) {
             if (queue.size() < k) {
@@ -123,6 +130,11 @@ public class FindMaxCountWord {
     }
 
 
+    /**
+     * 找出字符串中重复最多的字符
+     *
+     * @param str
+     */
     public static void compute(String str) {
         int[] k = new int[127];
         for (int i = 0; i < str.length(); i++) {

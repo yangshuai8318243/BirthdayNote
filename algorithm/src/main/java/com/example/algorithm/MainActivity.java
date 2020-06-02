@@ -15,6 +15,7 @@ import com.birthdaynote.library.widget.recycler.BaseQuickAdapter;
 import com.example.algorithm.algorithm.array.ArrayNew;
 import com.example.algorithm.algorithm.array.ArraySort;
 import com.example.algorithm.algorithm.array.FindData;
+import com.example.algorithm.algorithm.base.TestPower;
 import com.example.algorithm.algorithm.linked.LinkedListFlip;
 import com.example.algorithm.algorithm.step.Step20;
 import com.example.algorithm.algorithm.str.Str100W;
@@ -32,6 +33,7 @@ public class MainActivity extends MvpViewActivity {
             new NameData("二分查找", FindData.class.getName()),
             new NameData("数组创建", ArrayNew.class.getName()),
             new NameData("树算法", TreeAlgorithm.class.getName()),
+            new NameData("打印数字", TestPower.class.getName()),
 //            new NameData("ImageFragment", ImagFragment.class.getName()),
     };
 

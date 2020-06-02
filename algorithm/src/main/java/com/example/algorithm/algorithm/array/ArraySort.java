@@ -20,13 +20,62 @@ public class ArraySort extends AlgorithmBaseFragment {
         stringBuilder.append(Arrays.toString(scr));
 
 //        sortMaoPao(scr);
-        scr = mergeSort(scr);
+//        scr = mergeSort(scr);
+        maopao(scr);
 
         stringBuilder.append("sort array:\n");
         stringBuilder.append(Arrays.toString(scr));
 
         textView.setText(stringBuilder.toString());
     }
+
+    /**
+     * 插入排序
+     *
+     * @param ints
+     */
+    private void charu(int[] ints) {
+        for (int i = 1; i < ints.length; i++) {
+            for (int j = 0; j < i; j++) {
+                int data1 = ints[i];
+                int data2 = ints[j];
+                if (data1 < data2) {
+                    ints[j] = data1;
+                    ints[i] = data2;
+                }
+            }
+        }
+    }
+
+
+    private int[] guiBing(int[] ints) {
+        int length = ints.length;
+        if (length < 2) {
+            return ints;
+        }
+        int i = length / 2;
+        int[] left = Arrays.copyOfRange(ints, 0, i);
+        int[] right = Arrays.copyOfRange(ints, i + 1, length);
+
+        return guiBingSort(guiBing(left), guiBing(right));
+    }
+
+    private int[] guiBingSort(int[] left, int[] right) {
+        int[] data = new int[left.length + right.length];
+        for (int i = 0, l = 0, r = 0; i < data.length; i++) {
+            if (l >= left.length) {
+                data[i] = right[r++];
+            } else if (r >= right.length) {
+                data[i] = left[l++];
+            } else if (left[l] > right[r]) {
+                data[i] = right[r++];
+            } else {
+                data[i] = left[l++];
+            }
+        }
+        return data;
+    }
+
 
     /**
      * 归并排序
@@ -83,5 +132,17 @@ public class ArraySort extends AlgorithmBaseFragment {
         }
     }
 
+
+    private void maopao(int[] ints) {
+        for (int i = 0; i < ints.length; i++) {
+            for (int j = 0; j < ints.length - 1; j++) {
+                if (ints[j + 1] < ints[j]) {
+                    int anInt = ints[j + 1];
+                    ints[j + 1] = ints[j];
+                    ints[j] = anInt;
+                }
+            }
+        }
+    }
 
 }
