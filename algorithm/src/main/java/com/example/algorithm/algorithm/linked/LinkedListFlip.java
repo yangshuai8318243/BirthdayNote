@@ -89,4 +89,28 @@ public class LinkedListFlip extends AlgorithmBaseFragment {
         return head;
     }
 
+
+    /**
+     * 删除链表中重复的结点
+     * 每一个节点和后一个进行比较，如果相同择循环之后所有的节点，
+     * 直到找到不相同的，将不相同的节点递归。
+     * 如果不相同，则将当前节点下一个节点递归，指向自己的下一个节点
+     *
+     * @param pHead
+     * @return
+     */
+    public Node deleteDuplication(Node pHead) {
+        if (pHead == null || pHead.next == null)
+            return pHead;
+        Node next = pHead.next;
+        if (pHead.val == next.val) {
+            while (next != null && pHead.val == next.val)
+                next = next.next;
+            return deleteDuplication(next);
+        } else {
+            pHead.next = deleteDuplication(pHead.next);
+            return pHead;
+        }
+    }
+
 }

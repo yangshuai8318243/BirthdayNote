@@ -4,6 +4,7 @@ public class Node {
     int o;
     String name;
     String linkeName;
+    Object val;
     Node next;
 
     public Node(int o) {
@@ -13,6 +14,7 @@ public class Node {
     public Node(int o, String name, String linkeName) {
         this.o = o;
         this.name = name;
+        this.val = name;
         this.linkeName = linkeName;
     }
 

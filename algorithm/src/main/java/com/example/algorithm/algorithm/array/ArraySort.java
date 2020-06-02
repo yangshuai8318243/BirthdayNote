@@ -21,13 +21,23 @@ public class ArraySort extends AlgorithmBaseFragment {
 
 //        sortMaoPao(scr);
 //        scr = mergeSort(scr);
-        maopao(scr);
-
-        stringBuilder.append("sort array:\n");
-        stringBuilder.append(Arrays.toString(scr));
+        int[] clone = scr.clone();
+//        reOrderArray1(clone);
+//
+//        stringBuilder.append("sort array1:\n");
+//        stringBuilder.append(Arrays.toString(clone));
+//
+//        stringBuilder.append("\n");
+        stringBuilder.append("sort array2:\n");
+        clone = scr.clone();
+        reOrderArray2(clone);
+        stringBuilder.append(Arrays.toString(clone));
 
         textView.setText(stringBuilder.toString());
     }
+
+    //----------------------------------插入排序---------------------------------------------------------------
+
 
     /**
      * 插入排序
@@ -47,6 +57,7 @@ public class ArraySort extends AlgorithmBaseFragment {
         }
     }
 
+//----------------------------------归并排序---------------------------------------------------------------
 
     private int[] guiBing(int[] ints) {
         int length = ints.length;
@@ -114,6 +125,7 @@ public class ArraySort extends AlgorithmBaseFragment {
         }
         return result;
     }
+//----------------------------------冒泡排序---------------------------------------------------------------
 
     /**
      * 冒泡排序
@@ -143,6 +155,44 @@ public class ArraySort extends AlgorithmBaseFragment {
                 }
             }
         }
+    }
+
+    //------------------------------------------奇数位于偶数前面-------------------------------------------------------
+    public void reOrderArray1(int[] nums) {
+        // 奇数个数
+        int oddCnt = 0;
+        for (int x : nums)
+            if (!isEven(x))
+                oddCnt++;
+        int[] copy = nums.clone();
+        int i = 0, j = oddCnt;
+        for (int num : copy) {
+            if (num % 2 == 1)
+                nums[i++] = num;
+            else
+                nums[j++] = num;
+        }
+    }
+
+    private boolean isEven(int x) {
+        return x % 2 == 0;
+    }
+
+    public void reOrderArray2(int[] nums) {
+        int N = nums.length;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N - 1; j++) {
+                if (isEven(nums[j]) && !isEven(nums[j + 1])) {
+                    swap(nums, j, j + 1);
+                }
+            }
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
 
 }
