@@ -10,7 +10,13 @@ public class LoopLinked {
         }
     }
 
-    /*判断是否相交，如果相交，得到第一个相交点*/
+    /**
+     * 判断是否相交，如果相交，得到第一个相交点
+     *
+     * @param head1
+     * @param head2
+     * @return
+     */
     public static Node getIntersectNode(Node head1, Node head2) {
         if (head1 == null || head2 == null) {
             return null;
@@ -52,7 +58,13 @@ public class LoopLinked {
         return n1;
     }
 
-    /*无环时的判断方法*/
+    /**
+     * 无环时的判断方法
+     *
+     * @param head1
+     * @param head2
+     * @return
+     */
     public static Node noLoop(Node head1, Node head2) {
         if (head1 == null || head2 == null) {
             return null;
@@ -85,7 +97,15 @@ public class LoopLinked {
         return cur1;
     }
 
-    /*有环时的判断方法*/
+    /**
+     * 有环时的判断方法
+     *
+     * @param head1
+     * @param loop1
+     * @param head2
+     * @param loop2
+     * @return
+     */
     public static Node bothLoop(Node head1, Node loop1, Node head2, Node loop2) {
         Node cur1 = null;
         Node cur2 = null;
