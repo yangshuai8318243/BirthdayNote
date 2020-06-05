@@ -2,17 +2,26 @@ package com.birthdaynote.library.app;
 
 import android.app.Application;
 
+//import com.birthdaynote.library.error.CrashCatchHandler;
+import com.birthdaynote.library.util.Utils;
+//import com.github.anrwatchdog.ANRWatchDog;
+//import com.github.moduth.blockcanary.BlockCanary;
+
 import androidx.annotation.NonNull;
 
 public class BaseApp extends Application {
     private static Application sInstance;
-    public static String TAG = "";
+    public String TAG = "";
+    public static boolean tst = false;
 
     @Override
     public void onCreate() {
         TAG = getClass().getName();
         super.onCreate();
         setApplication(this);
+        Utils.init(this);
+//        new ANRWatchDog().start();
+//        BlockCanary.install(this, new AppBlockCanaryContext()).start();
     }
 
     /**

@@ -6,8 +6,9 @@ def stethoVersion = "1.5.0"
 def butterKnifeVersion = "8.5.1"
 def daggerVersion = "2.8"
 def routerVersion = "0.2.3"
+def booster_version = "1.6.0"
 
-project.ext {
+rootProject.ext {
     android = [
             compileSdkVersion: 25,
             buildToolsVersion: "25.0.2",
@@ -23,8 +24,8 @@ project.ext {
             "support-v4"                  : "com.android.support:support-v4:${supportVersion}",
             "appcompat-v7"                : "com.android.support:appcompat-v7:${supportVersion}",
             "design"                      : "com.android.support:design:${supportVersion}",
-            "recyclerview-v7"                : "com.android.support:recyclerview-v7:${supportVersion}",
-            "cardview-v7"                    : "com.android.support:cardview-v7:${supportVersion}",
+            "recyclerview-v7"             : "com.android.support:recyclerview-v7:${supportVersion}",
+            "cardview-v7"                 : "com.android.support:cardview-v7:${supportVersion}",
             "constraint-layout"           : "com.android.support.constraint:constraint-layout:1.0.0-alpha7",
 
             //java8-support
@@ -68,6 +69,13 @@ project.ext {
             "retrofit2-fastjson-converter": "com.github.BaronZ88:Retrofit2-FastJson-Converter:1.2",
 
             //test
-            "junit"                       : "junit:junit:4.12"
+            "junit"                       : "junit:junit:4.12",
+            //性能检测插件
+            "booster-gradle-plugin"       : "com.didiglobal.booster:booster-gradle-plugin:${booster_version}",
+            //静态分析
+            "booster-task-all"            : "com.didiglobal.booster:booster-task-all:${booster_version}",
+            "booster-task-analyser"       : "com.didiglobal.booster:booster-task-analyser:${booster_version}",
+            "booster-transform-thread"    : "com.didiglobal.booster:booster-transform-thread:${booster_version}",
+            "booster-api"                 : "com.didiglobal.booster:booster-api:${booster_version}",
     ]
 }

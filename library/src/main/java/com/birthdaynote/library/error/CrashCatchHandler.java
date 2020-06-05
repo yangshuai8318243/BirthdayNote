@@ -1,6 +1,8 @@
 package com.birthdaynote.library.error;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,6 +33,20 @@ public class CrashCatchHandler implements Thread.UncaughtExceptionHandler {
         mDefaultCaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         //把当前的crash捕获器设置成默认的crash捕获器
         Thread.setDefaultUncaughtExceptionHandler(this);
+
+//        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    try {
+//                        Looper.loop();
+//                    } catch (Throwable e) {
+//
+//                    }
+//                }
+//            }
+//        });
+
     }
 
     private static class BuildeCrashCatchHandler {
@@ -42,19 +58,21 @@ public class CrashCatchHandler implements Thread.UncaughtExceptionHandler {
         if (!handleException(throwable) && mDefaultCaughtExceptionHandler != null) {
             //如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultCaughtExceptionHandler.uncaughtException(thread, throwable);
-        }else {
+        } else {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                Log.e(TAG, "error : "+ e);
+                Log.e(TAG, "error : " + e);
             }
 //            //退出程序
-//            AppUtil.restarteApp(mContext);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(10);
         }
     }
 
     /**
      * 自定义错误处理
+     *
      * @param ex
      * @return true:如果处理了该异常信息;否则返回false
      */
@@ -79,4 +97,14 @@ public class CrashCatchHandler implements Thread.UncaughtExceptionHandler {
         return true;
     }
 
+
+    /**
+     * 重启应用
+     */
+    private void restartApp() {
+//        Intent intent = new Intent(mContext, MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        mContext.startActivity(intent);
+        android.os.Process.killProcess(android.os.Process.myPid());//再此之前可以做些退出等操作
+    }
 }

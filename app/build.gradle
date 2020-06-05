@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 // 应用WMRouter插件
 apply plugin: 'WMRouter'
+apply plugin: 'com.didiglobal.booster'
+//apply plugin: 'com.hujiang.android-aspectjx'
+//apply plugin: 'com.didi.virtualapk.host'
 android {
     compileSdkVersion 29
     defaultConfig {
@@ -10,8 +13,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField("Boolean","isBuildModule","${isBuildModule.toBoolean()}")
-        buildConfigField("Boolean","isDebug","true")
+        buildConfigField("Boolean", "isBuildModule", "${isBuildModule.toBoolean()}")
+        buildConfigField("Boolean", "isDebug", "true")
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -19,7 +22,11 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,7 +35,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+//    测试框架
     testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:1.10.19"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
@@ -47,7 +56,15 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:0.12.0'
     //    图片加载框架fresco 动图
     implementation 'com.facebook.fresco:animated-gif:0.12.0'
-//    implementation 'com.squareup:javapoet:1.11.1'
     annotationProcessor 'com.sankuai.waimai.router:compiler:1.2.0'
 
+//    内存检测
+//    kt版本
+    debugImplementation('com.squareup.leakcanary:leakcanary-android:2.2') {
+        exclude group: 'com.squareup.okio', module: 'okio'
+    }
+    //切片编程
+
+    //插件化  virtualapk
+//    api 'com.didi.virtualapk:core:0.9.8'
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.birthdaynote.R;
 import com.birthdaynote.app.BDFragment;
@@ -16,13 +17,17 @@ import com.birthdaynote.module.my.MyFragment;
 import com.birthdaynote.module.news.NewsFragment;
 import com.birthdaynote.module.tools.ToolsFragment;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class HomeFragment extends BDFragment<HomePtr, DefEven> {
+    private static final String SAVE_TAB_KEY = "SAVE_TAB_KEY";
+
     @BindView(R.id.news_icon)
     Button news_itme;
 
@@ -34,6 +39,8 @@ public class HomeFragment extends BDFragment<HomePtr, DefEven> {
 
     @BindView(R.id.my_icon)
     Button my_icon;
+    private int thisViewId;
+    private int saveViewId = -1;
 
 
     @Override
@@ -48,69 +55,79 @@ public class HomeFragment extends BDFragment<HomePtr, DefEven> {
                 Log.e(TAG, "==test==null====>");
             }
         }
-
     }
 
     private void shwoFragment(int viewId) {
+
         Fragment fragment = null;
+        thisViewId = viewId;
         switch (viewId) {
             case R.id.brithday_icon:
-                fragment = getFragmentManager().findFragmentByTag(BirthdayFragment.class.getName());
+                fragment = getChildFragmentManager().findFragmentByTag(BirthdayFragment.class.getName());
                 if (fragment == null) {
                     addFragment(BirthdayFragment.class, R.id.home_content);
                 }
 
                 break;
             case R.id.tools_icon:
-                fragment = getFragmentManager().findFragmentByTag(ToolsFragment.class.getName());
+                fragment = getChildFragmentManager().findFragmentByTag(ToolsFragment.class.getName());
                 if (fragment == null) {
                     addFragment(ToolsFragment.class, R.id.home_content);
                 }
 
                 break;
             case R.id.my_icon:
-                fragment = getFragmentManager().findFragmentByTag(MyFragment.class.getName());
+                fragment = getChildFragmentManager().findFragmentByTag(MyFragment.class.getName());
                 if (fragment == null) {
                     addFragment(MyFragment.class, R.id.home_content);
                 }
 
                 break;
             case R.id.news_icon:
-                fragment = getFragmentManager().findFragmentByTag(NewsFragment.class.getName());
+                fragment = getChildFragmentManager().findFragmentByTag(NewsFragment.class.getName());
                 if (fragment == null) {
                     addFragment(NewsFragment.class, R.id.home_content);
                 }
                 break;
         }
 
-        Fragment fragmentByTag = getFragmentManager().findFragmentByTag(NewsFragment.class.getName());
+        Fragment fragmentByTag = getChildFragmentManager().findFragmentByTag(NewsFragment.class.getName());
         if (fragmentByTag != null) {
             hideFragment(fragmentByTag);
         }
-        fragmentByTag = getFragmentManager().findFragmentByTag(BirthdayFragment.class.getName());
+        fragmentByTag = getChildFragmentManager().findFragmentByTag(BirthdayFragment.class.getName());
         if (fragmentByTag != null) {
             hideFragment(fragmentByTag);
         }
-        fragmentByTag = getFragmentManager().findFragmentByTag(ToolsFragment.class.getName());
+        fragmentByTag = getChildFragmentManager().findFragmentByTag(ToolsFragment.class.getName());
         if (fragmentByTag != null) {
             hideFragment(fragmentByTag);
         }
-        fragmentByTag = getFragmentManager().findFragmentByTag(MyFragment.class.getName());
+        fragmentByTag = getChildFragmentManager().findFragmentByTag(MyFragment.class.getName());
         if (fragmentByTag != null) {
             hideFragment(fragmentByTag);
         }
-
 
         if (fragment != null) {
             shwoFragment(fragment);
         }
+
+        FrameLayout viewById = findViewById(R.id.home_content);
+        int childCount = viewById.getChildCount();
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         news_itme.setEnabled(false);
-        shwoFragment(R.id.news_icon);
+        if (saveViewId != -1) {
+            shwoFragment(saveViewId);
+            View view = findViewById(saveViewId);
+            showTable(view);
+        } else {
+            shwoFragment(R.id.news_icon);
+        }
     }
 
     @Override
@@ -120,12 +137,16 @@ public class HomeFragment extends BDFragment<HomePtr, DefEven> {
 
     @OnClick({R.id.brithday_icon, R.id.news_icon, R.id.tools_icon, R.id.my_icon})
     void onBrithdayIconClick(View view) {
+        showTable(view);
+        shwoFragment(view.getId());
+    }
+
+    private void showTable(View view) {
         news_itme.setEnabled(true);
         brithday_icon.setEnabled(true);
         tools_icon.setEnabled(true);
         my_icon.setEnabled(true);
         view.setEnabled(false);
-        shwoFragment(view.getId());
     }
 
     @Nullable
@@ -140,4 +161,12 @@ public class HomeFragment extends BDFragment<HomePtr, DefEven> {
     protected HomePtr initPtr() {
         return getPtrFactory().newPtr(HomePtr.class, this);
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt(SAVE_TAB_KEY, thisViewId);
+        getChildFragmentManager().getFragments().clear();
+        super.onSaveInstanceState(outState);
+    }
+
 }

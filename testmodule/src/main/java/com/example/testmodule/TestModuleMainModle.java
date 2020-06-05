@@ -45,7 +45,7 @@ public class TestModuleMainModle extends MvpModel<BaseData> {
     public void onCleared() {
         Log.e(TAG,"=========onCleared============>");
         if (myRunnable != null){
-            myRunnable.flag = false;
+//            myRunnable.flag = false;
         }
     }
 }

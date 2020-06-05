@@ -1,5 +1,7 @@
 package com.example.algorithm.algorithm.base;
 
+import android.util.Log;
+
 import com.example.algorithm.AlgorithmBaseFragment;
 
 public class TestPower extends AlgorithmBaseFragment {
@@ -9,7 +11,11 @@ public class TestPower extends AlgorithmBaseFragment {
             @Override
             public void run() {
                 PrintInt printInt = new PrintInt();
-                printInt.print1ToMaxOfNDigits(12);
+//                printInt.print1ToMaxOfNDigits(12);
+                Log.e(TAG, (5 / 2) + "");
+                Log.e(TAG, (3 / 2) + "");
+                Log.e(TAG, (7 / 2) + "");
+
             }
         }).start();
     }

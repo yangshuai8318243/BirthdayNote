@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 
-public class DataManagerDefFactory<D extends DataManager> implements DataManagerFactoryInterface<D> {
+public class DataManagerDefFactory implements DataManagerFactoryInterface {
     private OkHttpClient mOkHttpClient;
     private Headers mHeader;
     private String mMediaType;
@@ -25,9 +25,9 @@ public class DataManagerDefFactory<D extends DataManager> implements DataManager
     }
 
     @Override
-    public D createDataManager(Class<D> dataManagerClass) {
+    public <M extends DataManager> M createDataManager(Class<M> dataManagerClass) {
         try {
-            Constructor<D> constructor = dataManagerClass.getConstructor(LocalDataManager.class, NetworkDataManager.class);
+            Constructor<M> constructor = dataManagerClass.getConstructor(LocalDataManager.class, NetworkDataManager.class);
 
             OkNetManager okNetManager = new OkNetManager(mOkHttpClient, mHeader, mMediaType);
             RoomLocalManager roomLocalManager = new RoomLocalManager();

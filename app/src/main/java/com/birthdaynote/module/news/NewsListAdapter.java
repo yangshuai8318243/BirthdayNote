@@ -1,7 +1,6 @@
 package com.birthdaynote.module.news;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.birthdaynote.R;
 import com.birthdaynote.library.data.entity.BaseData;

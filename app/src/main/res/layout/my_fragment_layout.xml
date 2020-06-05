@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <Button
@@ -16,7 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
-        android:text="跳转1" />
+        android:text="跳转——模块开发" />
+
+    <Button
+        android:id="@+id/tiao_zhuan2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:text="跳转_新进程Activity" />
+
 
     <Button
         android:id="@+id/cha_jian"
@@ -24,4 +33,12 @@
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:text="加载插件" />
+
+
+    <Button
+        android:id="@+id/thread_test"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:text="线程测试" />
 </LinearLayout>

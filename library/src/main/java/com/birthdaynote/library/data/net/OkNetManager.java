@@ -1,12 +1,19 @@
 package com.birthdaynote.library.data.net;
 
+import android.util.Log;
+
 import com.birthdaynote.library.data.entity.DecorationData;
 import com.google.gson.Gson;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.Dns;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
@@ -19,8 +26,18 @@ public class OkNetManager implements NetworkDataManager {
     private String mMediaType;
 
     public OkNetManager(OkHttpClient mOkHttpClient, Headers mHeader, String mMediaType) {
-        mOkHttpClient.newBuilder().addInterceptor(new ErrorInterceptor(new HashMap<Integer, String>()));
-        this.mOkHttpClient = mOkHttpClient;
+        OkHttpClient build = mOkHttpClient.newBuilder()
+                .addInterceptor(new ErrorInterceptor(new HashMap<Integer, String>()))
+                .dns(new Dns() {
+                    @Override
+                    public List<InetAddress> lookup(String hostname) throws UnknownHostException {
+                        Log.e("---Dns---", hostname);
+
+                        return Arrays.asList(InetAddress.getAllByName(hostname));
+                    }
+                }).build();
+
+        this.mOkHttpClient = build;
         this.mMediaType = mMediaType;
     }
 

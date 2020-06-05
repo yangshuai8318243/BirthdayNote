@@ -19,6 +19,7 @@ import com.example.algorithm.algorithm.base.TestPower;
 import com.example.algorithm.algorithm.linked.LinkedListFlip;
 import com.example.algorithm.algorithm.step.Step20;
 import com.example.algorithm.algorithm.str.Str100W;
+import com.example.algorithm.algorithm.thread.ShunXuThread;
 import com.example.algorithm.algorithm.tree.TreeAlgorithm;
 
 import java.util.Arrays;
@@ -34,6 +35,7 @@ public class MainActivity extends MvpViewActivity {
             new NameData("数组创建", ArrayNew.class.getName()),
             new NameData("树算法", TreeAlgorithm.class.getName()),
             new NameData("打印数字", TestPower.class.getName()),
+            new NameData("线程算法", ShunXuThread.class.getName()),
 //            new NameData("ImageFragment", ImagFragment.class.getName()),
     };
 

@@ -2,18 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:background="@color/im_colorAccent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:text="@string/app_name" />
 
     <Button
         android:id="@+id/register_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register" />
 
     <Button
         android:id="@+id/login_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login" />
+
+    <Button
+        android:id="@+id/add_view_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="add_view_btn" />
+
+    <Button
+        android:id="@+id/start_serv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="start_serv" />
+
+
+    <RelativeLayout
+        android:id="@+id/test_layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
 

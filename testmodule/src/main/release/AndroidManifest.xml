@@ -10,8 +10,10 @@
             android:label="@string/im_label_home_page">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.baronzhang.android.im"
                     android:path="/im/home"
@@ -20,12 +22,13 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".TestActivity1">
+        <activity android:name=".TestActivity1">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.baronzhang.android.im"
                     android:path="/im/home1"
@@ -34,6 +37,28 @@
             </intent-filter>
         </activity>
 
+
+        <activity
+            android:name=".TestProcessActivity"
+            android:process=":test.shuai.yang">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.baronzhang.android.im"
+                    android:path="/im/home2"
+                    android:port="6666"
+                    android:scheme="router" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".TestService"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>

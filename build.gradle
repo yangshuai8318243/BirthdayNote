@@ -1,13 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    apply from: "config.gradle"
 
     repositories {
-        jcenter()
         google()
+        jcenter()
         maven {
-            url 'https://maven.google.com'
-//            url 'https://maven.aliyun.com/repository/google'
+//            url 'https://oss.sonatype.org/content/repositories/public',
+                    url "https://dl.bintray.com/soli/maven"
         }
     }
     dependencies {
@@ -19,18 +20,29 @@ buildscript {
         // in the individual module build.gradle files
         // 添加WMRouter插件
         classpath "com.sankuai.waimai.router:plugin:1.2.0"
+//        滴滴检测工具booster插件
+        classpath rootProject.ext.dependencies["booster-gradle-plugin"]
+        //静态检测
+        classpath rootProject.ext.dependencies["booster-task-analyser"]
+        //线程优化
+        classpath rootProject.ext.dependencies["booster-transform-thread"]
+        //切片编程，Hooker Android
+        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
+        //替换指定类插件
+        classpath "com.didichuxing.tools:droidassist:1.1.0"
+        //插件化 virtualapk
+//        classpath 'com.didi.virtualapk:gradle:0.9.8.6'
+        //删除多余R文件
+        classpath   'com.mogujie.gradle:ThinRPlugin:0.0.3'
+        //资源混淆
+        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.18'
     }
+
 }
 
 allprojects {
     repositories {
-//        maven {
-//            url 'https://maven.aliyun.com/repository/google'
-//        }
         google()
-        maven{
-            url 'https://maven.goole.com'
-        }
         jcenter()
     }
 }

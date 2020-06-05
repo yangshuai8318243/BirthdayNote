@@ -80,5 +80,6 @@ public class NewsPtr extends MvpPresenter<NewsFragment, NewsEven, NewsModle> {
 
             }
         }));
+
     }
 }

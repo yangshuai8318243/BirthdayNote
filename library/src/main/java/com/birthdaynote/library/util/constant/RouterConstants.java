@@ -5,5 +5,6 @@ public interface RouterConstants {
 
     String TEST_ACTIVITY = WITH + "TestModuleMainActivity";
     String TEST_ACTIVITY1 = WITH + "TestModuleMainActivity1";
+    String TEST_ACTIVITY_PROCESS = WITH + "TEST_ACTIVITY_PROCESS";
 
 }

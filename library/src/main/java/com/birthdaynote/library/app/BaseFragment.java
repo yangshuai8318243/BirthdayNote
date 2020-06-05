@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,6 +16,7 @@ import com.birthdaynote.library.mvp.ContainerActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -22,24 +25,105 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 public class BaseFragment extends Fragment implements PermissionsListener {
-    protected static String TAG = "";
+    protected String TAG = "";
     private static final String BASE_TAG = "BaseFragment";
 
     @Override
     public void onAttach(Context context) {
         TAG = this.getClass().getName();
         super.onAttach(context);
+        Log.e(TAG, "-->onAttach");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "-->onCreate");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.e(TAG, "-->onCreateView");
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.e(TAG, "-->onViewCreated");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.e(TAG, "-->onActivityCreated");
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.e(TAG, "-->onViewStateRestored");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.e(TAG, "-->onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(TAG, "-->onResume");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        Log.e(TAG, "-->onCreateOptionsMenu");
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        Log.e(TAG, "-->onPrepareOptionsMenu");
+    }
+
+    @Override
+    public void onPause() {
+        Log.e(TAG, "-->onPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.e(TAG, "-->onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onStop() {
+        Log.e(TAG, "-->onStop");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.e(TAG, "-->onDestroyView");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e(TAG, "-->onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        Log.e(TAG, "-->onDetach");
+        super.onDetach();
     }
 
     /**
@@ -97,7 +181,7 @@ public class BaseFragment extends Fragment implements PermissionsListener {
      */
     protected void addFragment(Fragment fragment, int viewId, String tag) {
         if (fragment != null) {
-            FragmentTransaction trans = getActivity().getSupportFragmentManager()
+            FragmentTransaction trans = getChildFragmentManager()
                     .beginTransaction();
             trans.add(viewId, fragment, tag);
             trans.commitAllowingStateLoss();
@@ -112,7 +196,7 @@ public class BaseFragment extends Fragment implements PermissionsListener {
      * @param fragment
      */
     protected void shwoFragment(Fragment fragment) {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.show(fragment);
         transaction.commitAllowingStateLoss();
     }
@@ -123,7 +207,7 @@ public class BaseFragment extends Fragment implements PermissionsListener {
      * @param fragment
      */
     protected void hideFragment(Fragment fragment) {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.hide(fragment);
         transaction.commitAllowingStateLoss();
     }
@@ -161,7 +245,7 @@ public class BaseFragment extends Fragment implements PermissionsListener {
      */
     protected void replaceFragment(Fragment fragment, int viewId) {
         if (fragment != null) {
-            FragmentTransaction trans = getActivity().getSupportFragmentManager()
+            FragmentTransaction trans = getChildFragmentManager()
                     .beginTransaction();
             trans.replace(viewId, fragment);
             trans.commitAllowingStateLoss();
@@ -312,5 +396,14 @@ public class BaseFragment extends Fragment implements PermissionsListener {
             intent.putExtra(ContainerActivity.BUNDLE, bundle);
         }
         startActivity(intent);
+    }
+
+    /**
+     * 通过id查找当前Fragment的view
+     *
+     * @param id 查找view的id
+    */
+    protected <V extends View> V findViewById(@IdRes int id) {
+        return getView().findViewById(id);
     }
 }

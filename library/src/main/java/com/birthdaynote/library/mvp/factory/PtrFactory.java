@@ -15,23 +15,24 @@ public class PtrFactory implements PtrFactoryInterface {
 
     @Override
     public <P extends PresenterInterface, V extends ViewInterface> P newPtr(Class<P> ptr, V viewInterface) {
+        Log.e(getClass().getName(),"-------------------->" + ptr.getName());
         try {
             return (P) ptr.getConstructor(viewInterface.getClass()).newInstance(viewInterface);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-//            Log.e("PtrFactory",e.getMessage());
+            Log.e("PtrFactory",e.getMessage());
 
         } catch (InstantiationException e) {
             e.printStackTrace();
-//            Log.e("PtrFactory",e.getMessage());
+            Log.e("PtrFactory",e.getMessage());
 
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-//            Log.e("PtrFactory",e.getMessage());
+            Log.e("PtrFactory",e.getMessage());
 
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-//            Log.e("PtrFactory",e.getMessage());
+            Log.e("PtrFactory",e.getMessage());
         }
         throw new RuntimeException("please inherit PresenterInterface");
     }

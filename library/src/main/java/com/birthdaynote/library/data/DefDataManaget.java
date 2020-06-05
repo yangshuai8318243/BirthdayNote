@@ -58,7 +58,7 @@ public class DefDataManaget extends DataManager {
             if (data != null) {
                 decorationData = new DecorationData.Builder().data(data).build();
             } else {
-                decorationData = new DecorationData.Builder().code(00).mesage("没有本地数据").build();
+                 decorationData = new DecorationData.Builder().code(00).mesage("没有本地数据").build();
             }
         }
         return decorationData;

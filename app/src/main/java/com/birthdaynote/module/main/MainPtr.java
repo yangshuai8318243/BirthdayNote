@@ -35,6 +35,7 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     private MediatorLiveData<Integer> updateTimerText;
 
     private int timerIndex = 3;
+    private boolean isToView;
     private Handler mTimer = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -60,6 +61,7 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
             mTimer.sendEmptyMessageDelayed(0, TimeConstants.SEC);
             updateTimerText.setValue(timerIndex);
         } else {
+            Log.e(TAG, "=============>" + timerIndex);
             toView();
         }
     }
@@ -133,6 +135,11 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     }
 
     private void toView() {
+        Log.e(TAG, "======toView==============");
+        if (isToView) {
+            return;
+        }
+        isToView = true;
         startActivity(HomeActivity.class);
         finishActivity();
     }
@@ -149,6 +156,7 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
                 weatherLiveData.setValue(baseData);
                 updateTimer();
             } else {
+                Log.e(TAG, "请求失败" + baseData.getMessage());
                 toView();
             }
         }));
@@ -179,34 +187,6 @@ public class MainPtr extends MvpPresenter<MainFragment, MainEven, MainModel> {
     public void onCreate() {
         super.onCreate();
         requestPerTest();
-    }
-
-
-    private void rxTest() {
-        Observable<Object> compose = new Observable<String>() {
-            @Override
-            protected void subscribeActual(Observer<? super String> observer) {
-                observer.onNext("1111");
-                observer.onError(new RuntimeException("xxxxxx"));
-            }
-        }.compose((ObservableTransformer) upstream -> {
-            Log.e(TAG, "-----ObservableSource----apply----->");
-
-            return upstream.onErrorResumeNext(new ObservableSource() {
-                @Override
-                public void subscribe(Observer observer) {
-                    Log.e(TAG, "-----onErrorResumeNext----ObservableTransformer----->");
-
-                }
-            });
-        });
-
-        Disposable subscribe = compose.subscribe(o ->
-                        Log.e(TAG, "=======观察者==accept===="),
-                throwable ->
-                        Log.e(TAG, "=======观察者=error=accept===="));
-
-        addSubscribe(subscribe);
     }
 
 

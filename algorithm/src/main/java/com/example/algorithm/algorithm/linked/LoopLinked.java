@@ -26,10 +26,11 @@ public class LoopLinked {
         return null;
     }
 
-    /*
+    /**
      * 判断是否存在环，如果存在，则找出环的入口点。
      * 入口点找法：快慢指针，块指针走两步，满指针走一步，如果存在循环，则在慢指针走完环前，总会和快指针相遇。
-     * 从头指针和相遇点同时向后走，相遇的点必定是入口点。（下面数学推导）*/
+     * 从头指针和相遇点同时向后走，相遇的点必定是入口点。（下面数学推导）
+     */
     public static Node getLoopNode(Node head) {
         if (head == null || head.next == null || head.next.next == null) {
             return null;

@@ -1,6 +1,7 @@
 package com.birthdaynote.library.mvp;
 
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.util.Log;
 
 import com.birthdaynote.library.app.BaseActivity;
@@ -21,13 +22,13 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
     private Subject<E> mEven;
     private Disposable mDisposable;
     private BindLiveData mBindLiveData;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBindLiveData = new BindLiveData();
         bindPtr();
         bindBaseEven();
+
     }
 
 

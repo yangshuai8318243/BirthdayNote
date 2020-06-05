@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+//apply plugin: 'com.hujiang.android-aspectjx'
+
 
 android {
     compileSdkVersion 29
@@ -10,11 +12,21 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
+            // Zipalign优化
+            zipAlignEnabled true
+
+            consumerProguardFiles  'proguard-rules.pro'
         }
     }
 
@@ -58,4 +70,12 @@ dependencies {
 
 //    美团路由框架
     api 'com.sankuai.waimai.router:router:1.2.0'
+//    在Android P上使用反射  http://weishu.me/2019/03/16/another-free-reflection-above-android-p/
+    implementation 'me.weishu:free_reflection:2.2.0'
+//    //ANR检测
+//    implementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'
+//    //卡顿监测
+//    api 'com.github.markzhai:blockcanary-android:1.5.0'
+//    //帮助类
+    api 'commons-io:commons-io:2.5'
 }

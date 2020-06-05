@@ -1,13 +1,10 @@
 package com.birthdaynote.library.app;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.birthdaynote.library.mvp.ContainerActivity;
 
@@ -23,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 public abstract class BaseActivity extends AppCompatActivity implements PermissionsListener {
-    protected static String TAG = "";
+    protected String TAG = "";
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -34,6 +31,49 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "-->onCreate");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e(TAG, "-->onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e(TAG, "-->onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        Log.e(TAG, "-->onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "-->onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        Log.e(TAG, "-->onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG, "-->onRestart");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.e(TAG, "-->onSaveInstanceState");
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -250,6 +290,26 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         transaction.commitAllowingStateLoss();
     }
 
+
+    /**
+     * 删除Fragment
+     *
+     * @param fragment
+     */
+    protected void reomveFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.remove(fragment);
+        transaction.commit();
+    }
+
+    protected void removeAllFragment() {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        for (Fragment fragment : fragments) {
+            fragmentTransaction.remove(fragment);
+        }
+        fragmentTransaction.commit();
+    }
 
     /**
      * 跳转页面

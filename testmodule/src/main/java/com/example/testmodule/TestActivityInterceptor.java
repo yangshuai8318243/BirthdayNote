@@ -19,6 +19,7 @@ public class TestActivityInterceptor implements UriInterceptor {
 
         String uriStr = uri.toString();
         String netUrl = RouterConstants.TEST_ACTIVITY;
+
 //        String netUrl = "----->";
         if (!TextUtils.isEmpty(uriStr) && uriStr.equals(netUrl)) {
             callback.onNext();

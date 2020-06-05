@@ -12,6 +12,7 @@ import com.birthdaynote.R;
 import com.birthdaynote.app.BDFragment;
 import com.birthdaynote.library.data.entity.BaseData;
 import com.birthdaynote.library.data.entity.BaseDataList;
+import com.birthdaynote.library.util.PrintUtils;
 import com.birthdaynote.library.widget.recycler.BaseQuickAdapter;
 
 import androidx.annotation.NonNull;
@@ -40,8 +41,8 @@ public class NewsFragment extends BDFragment<NewsPtr, NewsEven> {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e(TAG,"---NewsFragment------------onCreateView-------------->");
-
+        Log.e(TAG, "---NewsFragment------------onCreateView-------------->");
+//        PrintUtils.printStackTrace(TAG);
         View inflate = inflater.inflate(R.layout.news_fragment_layout, container, false);
         bindView(inflate);
         return inflate;
@@ -56,7 +57,6 @@ public class NewsFragment extends BDFragment<NewsPtr, NewsEven> {
         initLiveData();
         isRefresh = true;
         reuestData();
-
     }
 
 

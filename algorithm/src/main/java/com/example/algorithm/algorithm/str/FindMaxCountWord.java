@@ -33,7 +33,6 @@ public class FindMaxCountWord {
 
     public static List findMaxStr(String[] strings, int top) {
         HashMap<String, Integer> tongji = new HashMap<>();
-//        HashMap<Integer, String> top10 = new HashMap<>();
         List<StrData> top10 = new ArrayList<>();
         for (int i = 0; i < strings.length; i++) {
             String string = strings[i];
@@ -46,20 +45,14 @@ public class FindMaxCountWord {
                 tongji.put(string, integer);
             }
             StrData strData = new StrData(string, integer);
-            Log.e("allMap", "---------->" + strData);
 
             addList(top10, strData, top);
         }
-        Object[] objects = tongji.values().toArray();
-        Log.e("allMap", "---------->" + tongji);
         return top10;
     }
 
 
     public static void addList(List<StrData> top10, StrData strData, int top) {
-        Log.e("addList", "---------->" + strData);
-        Log.e("addList", "---------->" + top10.size());
-
         if (top10.size() < top) {
             top10.add(strData);
         } else {
@@ -72,17 +65,6 @@ public class FindMaxCountWord {
                     break;
                 }
             }
-//            StrData strDataSrc = top10.get(0);
-//            if (strData.content > strDataSrc.content) {
-//                if (strData.name.equals(strDataSrc.name)) {
-//                    strDataSrc.content = strData.content;
-//                } else {
-//                    if (top10.size() >= top) {
-//                        top10.remove(top - 1);
-//                    }
-//                    top10.add(0, strData);
-//                }
-//            }
         }
 
         Collections.sort(top10, new Comparator<StrData>() {

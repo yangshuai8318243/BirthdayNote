@@ -2,9 +2,17 @@ if(isBuildModule.toBoolean()){
     apply plugin: 'com.android.application'
     // 应用WMRouter插件
     apply plugin: 'WMRouter'
+//    apply plugin: 'com.hujiang.android-aspectjx'
 }else{
     apply plugin: 'com.android.library'
 }
+apply plugin: 'com.didichuxing.tools.droidassist'
+droidAssistOptions {
+    config file("droidassist.xml") //插件配置文件(必选配置,支持多配置文件)
+}
+
+//apply plugin: 'com.didi.virtualapk.plugin'
+
 
 android {
     compileSdkVersion 29
@@ -21,6 +29,9 @@ android {
 
         buildConfigField("Boolean","isBuildModule","${isBuildModule.toBoolean()}")
         buildConfigField("Boolean","isDebug","true")
+    }
+    dataBinding {
+        enabled = true
     }
 
     buildTypes {
@@ -50,6 +61,25 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+//    美团动态路由
     annotationProcessor 'com.sankuai.waimai.router:compiler:1.2.0'
+    api 'com.didi.virtualapk:core:0.9.8'
+
+//    快速加载布局文件
+//    annotationProcessor 'com.zhangyue.we:x2c-apt:1.1.2'
+//    implementation 'com.zhangyue.we:x2c-lib:1.0.6'
+    //切片编程
+//    api 'org.aspectj:aspectjrt:1.9.5'
+    //ART 切片编程插入方法
+    api 'me.weishu:epic:0.6.0'
+
     api project(':library')
 }
+//
+////// 插件配置信息,放在文件最下面
+//virtualApk {
+//    packageId = 0x02f          // 插件资源id，避免资源id冲突
+//    targetHost='../app'   // 宿主工程的路径
+//    applyHostMapping = true    // 插件编译时是否启用应用宿主的apply mapping
+//}

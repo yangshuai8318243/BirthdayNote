@@ -11,6 +11,8 @@ import android.widget.Button;
 
 import com.birthdaynote.R;
 import com.birthdaynote.app.BDFragment;
+import com.birthdaynote.app.BirthdayApp;
+import com.birthdaynote.library.app.BaseApp;
 import com.birthdaynote.library.util.constant.RouterConstants;
 import com.sankuai.waimai.router.Router;
 import com.sankuai.waimai.router.core.OnCompleteListener;
@@ -82,6 +84,22 @@ public class MyFragment extends BDFragment<MyPtr, MyEven> {
     @OnClick(R.id.tiao_zhuan)
     void tiaoZhuan(View view) {
         tiao(RouterConstants.TEST_ACTIVITY);
+    }
+
+    @OnClick(R.id.thread_test)
+    void threadTest(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG, "thread name : " + Thread.currentThread().getName());
+            }
+        }).start();
+    }
+
+    @OnClick(R.id.tiao_zhuan2)
+    void tiaoZhuan2(View view) {
+        BaseApp.tst = true;
+        tiao(RouterConstants.TEST_ACTIVITY_PROCESS);
     }
 
     private void tiao(String action) {

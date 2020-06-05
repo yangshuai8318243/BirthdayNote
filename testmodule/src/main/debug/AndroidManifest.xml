@@ -9,14 +9,17 @@
         android:label="@string/im_app_name"
         android:supportsRtl="true"
         android:theme="@style/IMAppTheme">
-        <activity
-            android:name=".TestModuleMainActivity"
-            android:label="@string/im_label_home_page">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+<!--        <activity-->
+<!--            android:name=".TestModuleMainActivity"-->
+<!--            android:label="@string/im_label_home_page">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
+
+
     </application>
 
 </manifest>
