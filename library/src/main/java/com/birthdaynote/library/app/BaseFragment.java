@@ -22,7 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 public class BaseFragment extends Fragment implements PermissionsListener {
-    protected static String TAG = "";
+    protected String TAG = "";
     private static final String BASE_TAG = "BaseFragment";
 
     @Override

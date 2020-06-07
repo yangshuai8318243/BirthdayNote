@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Str100W extends AlgorithmBaseFragment {
 
@@ -25,9 +28,16 @@ public class Str100W extends AlgorithmBaseFragment {
 //                return 0;
 //            }
 //        });
-        test1();
+//        test1();
 //        test2();
-
+        StrAdd strAdd = new StrAdd();
+        String s = strAdd.bigNumAdd("192382489312", "431094");
+        int i = 123 & 321;
+//        textView.setText((123&321));
+        new TreeSet<Integer>().add(1);
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        stringStringHashMap.put("","");
+        stringStringHashMap.get("");
     }
 
     private void test1() {

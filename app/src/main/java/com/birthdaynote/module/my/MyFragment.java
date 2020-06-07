@@ -11,6 +11,8 @@ import android.widget.Button;
 
 import com.birthdaynote.R;
 import com.birthdaynote.app.BDFragment;
+import com.birthdaynote.library.data.entity.User;
+import com.birthdaynote.library.service.IUserService;
 import com.birthdaynote.library.util.constant.RouterConstants;
 import com.sankuai.waimai.router.Router;
 import com.sankuai.waimai.router.core.OnCompleteListener;
@@ -18,6 +20,7 @@ import com.sankuai.waimai.router.core.UriRequest;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -83,6 +86,17 @@ public class MyFragment extends BDFragment<MyPtr, MyEven> {
     void tiaoZhuan(View view) {
         tiao(RouterConstants.TEST_ACTIVITY);
     }
+
+    @OnClick(R.id.cha_jian_service)
+    void chajianService(View view) {
+        IUserService service = Router.getService(IUserService.class, RouterConstants.TEST_SERVICE1);
+        User user = service.getUser();
+        Log.e(TAG, "-----1111------>" + user.toString());
+        service.setUser(new User.UserBuilder().withName("chajianService").withId(123L).build());
+        User user1 = service.getUser();
+        Log.e(TAG, "-----2222------>" + user1.toString());
+    }
+
 
     private void tiao(String action) {
         UriRequest uriRequest = new UriRequest(getContext(), action);

@@ -24,4 +24,11 @@
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:text="加载插件" />
+
+    <Button
+        android:id="@+id/cha_jian_service"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:text="加载Service" />
 </LinearLayout>
