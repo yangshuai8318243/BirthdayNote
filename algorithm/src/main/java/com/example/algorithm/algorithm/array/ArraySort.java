@@ -11,7 +11,7 @@ public class ArraySort extends AlgorithmBaseFragment {
         int[] scr = new int[20];
         Random random = new Random();
         for (int i = 0; i < 20; i++) {
-            int i2 = random.nextInt(scr.length - 1);
+            int i2 = random.nextInt(3);
             scr[i] = i2;
         }
 
@@ -29,8 +29,8 @@ public class ArraySort extends AlgorithmBaseFragment {
 //
 //        stringBuilder.append("\n");
         stringBuilder.append("sort array2:\n");
-        clone = scr.clone();
-        reOrderArray2(clone);
+//        clone = scr.clone();
+        sort012(clone);
         stringBuilder.append(Arrays.toString(clone));
 
         textView.setText(stringBuilder.toString());
@@ -193,6 +193,21 @@ public class ArraySort extends AlgorithmBaseFragment {
         int t = nums[i];
         nums[i] = nums[j];
         nums[j] = t;
+    }
+
+    // -----------------------------包含0，1，2三种元素的数组排序-----------------------------
+
+    public void sort012(int[] ints) {
+        int zero = -1, one = 0, two = ints.length;
+        while (one < two) {
+            if (ints[one] == 0) {
+                swap(ints, ++zero, one++);
+            } else if (ints[one] == 2) {
+                swap(ints, --two, one);
+            } else {
+                ++one;
+            }
+        }
     }
 
 }
