@@ -7,4 +7,9 @@ public interface RouterConstants {
     String TEST_ACTIVITY1 = WITH + "TestModuleMainActivity1";
     String TEST_ACTIVITY_PROCESS = WITH + "TEST_ACTIVITY_PROCESS";
 
+
+    //    --------------------------------Service-------------------------
+    String SERVICE = "SERVICE";
+    String TEST_SERVICE1 = SERVICE + "TEST_SERVICE1";
+
 }

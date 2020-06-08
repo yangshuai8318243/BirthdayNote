@@ -113,4 +113,68 @@ public class LinkedListFlip extends AlgorithmBaseFragment {
         }
     }
 
+    /**
+     * 合并两个有序链表
+     * 循环实现
+     *
+     * @param nodeA
+     * @param nodeB
+     * @return
+     */
+    public Node mergeTowList(Node nodeA, Node nodeB) {
+        if (nodeA == null && nodeB == null) return null;
+        if (nodeA == null) return nodeB;
+        if (nodeB == null) return nodeA;
+        Node head = null;
+        while (nodeA != null && nodeB != null) {
+            if (nodeA.o > nodeB.o) {
+                if (head == null) {
+                    head = nodeB;
+                } else {
+                    head.next = nodeB;
+                }
+                nodeB = nodeB.next;
+
+            } else {
+                if (head == null) {
+                    head = nodeA;
+                } else {
+                    head.next = nodeA;
+                }
+                nodeA = nodeA.next;
+            }
+        }
+
+        if (nodeA != null) {
+            head.next = nodeA;
+        }
+
+        if (nodeB != null) {
+            head.next = nodeB;
+        }
+
+        return head;
+    }
+
+    /**
+     * 合并两个有序链表
+     * 递归实现
+     *
+     * @param nodeA
+     * @param nodeB
+     * @return
+     */
+    public Node mergeTowListDigui(Node nodeA, Node nodeB) {
+        if (nodeA == null && nodeB == null) return null;
+        if (nodeA == null) return nodeB;
+        if (nodeB == null) return nodeA;
+
+        if (nodeA.o > nodeB.o) {
+            nodeB.next = mergeTowListDigui(nodeB.next, nodeA);
+            return nodeB;
+        } else {
+            nodeA.next = mergeTowListDigui(nodeA.next, nodeB);
+            return nodeA;
+        }
+    }
 }
