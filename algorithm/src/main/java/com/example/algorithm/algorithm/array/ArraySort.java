@@ -30,7 +30,7 @@ public class ArraySort extends AlgorithmBaseFragment {
 //        stringBuilder.append("\n");
         stringBuilder.append("sort array2:\n");
 //        clone = scr.clone();
-        sort012(clone);
+        colorSort(clone);
         stringBuilder.append(Arrays.toString(clone));
 
         textView.setText(stringBuilder.toString());
@@ -210,4 +210,24 @@ public class ArraySort extends AlgorithmBaseFragment {
         }
     }
 
+    void colorSort(int[] ints) {
+        int zero = -1, one = 0, tow = ints.length;
+
+        while (one < tow) {
+            if (ints[one] == 0) {
+                zero++;
+                int anInt = ints[zero];
+                ints[zero] = ints[one];
+                ints[one] = anInt;
+                one++;
+            } else if (ints[one] == 2) {
+                tow--;
+                int anInt = ints[tow];
+                ints[tow] = ints[one];
+                ints[one] = anInt;
+            } else {
+                ++one;
+            }
+        }
+    }
 }

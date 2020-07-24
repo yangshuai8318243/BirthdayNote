@@ -4,6 +4,8 @@ import android.app.Application;
 
 //import com.birthdaynote.library.error.CrashCatchHandler;
 import com.birthdaynote.library.util.Utils;
+import com.github.anrwatchdog.ANRWatchDog;
+import com.github.moduth.blockcanary.BlockCanary;
 //import com.github.anrwatchdog.ANRWatchDog;
 //import com.github.moduth.blockcanary.BlockCanary;
 
@@ -20,8 +22,8 @@ public class BaseApp extends Application {
         super.onCreate();
         setApplication(this);
         Utils.init(this);
-//        new ANRWatchDog().start();
-//        BlockCanary.install(this, new AppBlockCanaryContext()).start();
+        new ANRWatchDog().start();
+        BlockCanary.install(this, new AppBlockCanaryContext()).start();
     }
 
     /**

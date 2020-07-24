@@ -36,9 +36,31 @@ public class Str100W extends AlgorithmBaseFragment {
 //        textView.setText((123&321));
         new TreeSet<Integer>().add(1);
         HashMap<String, String> stringStringHashMap = new HashMap<>();
-        stringStringHashMap.put("","");
+        stringStringHashMap.put("", "");
         stringStringHashMap.get("");
+        int i1 = testFind7();
+        textView.setText(Integer.toString(i1));
     }
+
+    private int testFind7() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 1000; i++) {
+            String s = Integer.toString(i);
+            stringBuilder.append(s);
+        }
+
+        String s = stringBuilder.toString();
+        int length = s.length();
+        char[] chars = s.toCharArray();
+        int index = 0;
+        for (char c : chars) {
+            if (c == '7'){
+                index++;
+            }
+        }
+        return index;
+    }
+
 
     private void test1() {
         String[] data = {"paper", "ckup", "book", "cup", "pen", "book", "aaaa", "bbbb", "cccc", "dddd"};

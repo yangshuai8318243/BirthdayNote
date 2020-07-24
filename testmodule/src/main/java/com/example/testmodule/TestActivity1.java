@@ -17,6 +17,7 @@ import com.birthdaynote.library.util.PrintUtils;
 import com.birthdaynote.library.util.RxUtils;
 import com.birthdaynote.library.util.constant.RouterConstants;
 import com.example.testmodule.hook.FixInstrumentation;
+import com.example.testmodule.rx.TestRxJava;
 import com.sankuai.waimai.router.annotation.RouterUri;
 
 import java.lang.reflect.InvocationTargetException;
@@ -105,6 +106,7 @@ public class TestActivity1 extends MvpViewActivity {
             }
         });
 
+        new TestRxJava().testMap();
     }
 
     @Override

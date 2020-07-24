@@ -64,7 +64,7 @@ dependencies {
         exclude group: 'com.squareup.okio', module: 'okio'
     }
     //切片编程
-
+//    implementation 'com.google.firebase:firebase-firestore:21.4.0'
     //插件化  virtualapk
 //    api 'com.didi.virtualapk:core:0.9.8'
 }

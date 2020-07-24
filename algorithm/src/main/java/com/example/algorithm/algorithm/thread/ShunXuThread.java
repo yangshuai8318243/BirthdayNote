@@ -9,6 +9,11 @@ import android.util.Log;
 
 import com.example.algorithm.AlgorithmBaseFragment;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.concurrent.locks.ReentrantLock;
+
 import androidx.annotation.NonNull;
 
 
@@ -20,7 +25,61 @@ public class ShunXuThread extends AlgorithmBaseFragment {
     protected void run() {
 //        fun1();
 //        fun2();
-        fun3();
+//        fun3();
+        fun4();
+//        Hashtable<String,String>  hashtable = new Hashtable<>();
+//        hashtable.put("","");
+//        HashMap<String, String> stringStringHashMap = new HashMap<>();
+//        stringStringHashMap.put("","");
+//
+//        ArrayList<String> strings = new ArrayList<>();
+//        strings.add()
+    }
+
+    private void testReentrantLock(){
+        ReentrantLock reentrantLock = new ReentrantLock();
+        reentrantLock.lock();
+        reentrantLock.unlock();
+    }
+
+
+    private void fun4(){
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG,"------thread1----------------->");
+            }
+        });
+        Thread thread2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG,"------thread2----------------->");
+
+            }
+        });
+        Thread thread3 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG,"------thread3----------------->");
+
+            }
+        });
+
+        try {
+            thread1.start();
+            thread2.start();
+
+            thread1.join();
+            thread2.join();
+
+            thread3.start();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
+
     }
 
     /**

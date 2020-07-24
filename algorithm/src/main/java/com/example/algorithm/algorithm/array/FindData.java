@@ -1,5 +1,7 @@
 package com.example.algorithm.algorithm.array;
 
+import android.util.Log;
+
 import com.example.algorithm.AlgorithmBaseFragment;
 
 import java.util.ArrayList;
@@ -30,7 +32,10 @@ public class FindData extends AlgorithmBaseFragment {
 //                .append("index is:")
 //                .append(i);
         textView.setText(stringBuilder.toString());
-
+        for (int i = 0; i < 10; i++) {
+            char j = (char) (i + '0');
+            Log.e(TAG,"------111------------>" + j);
+        }
 
     }
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<DroidAssist>-->
-<!--    <Replace>-->
-<!--        <Source>-->
-<!--            int android.util.Log.d(java.lang.String,java.lang.String)-->
-<!--        </Source>-->
-<!--        <Target>-->
-<!--            $_= com.didichuxing.tools.test.LogUtils.log($$);-->
-<!--        </Target>-->
-<!--    </Replace>-->
-<!--</DroidAssist>-->
+<DroidAssist>
+    <Replace>
+        <Source>
+            int android.util.Log.d(java.lang.String,java.lang.String)
+        </Source>
+        <Target>
+            $_= com.didichuxing.tools.test.LogUtils.log($$);
+        </Target>
+    </Replace>
+</DroidAssist>

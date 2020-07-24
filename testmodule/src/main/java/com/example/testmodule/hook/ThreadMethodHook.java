@@ -2,7 +2,7 @@ package com.example.testmodule.hook;
 
 import android.util.Log;
 
-import com.taobao.android.dexposed.XC_MethodHook;
+/*import com.taobao.android.dexposed.XC_MethodHook;
 
 public class ThreadMethodHook extends XC_MethodHook {
     private static final String TAG = "ThreadMethodHook----->";
@@ -20,4 +20,4 @@ public class ThreadMethodHook extends XC_MethodHook {
         Thread t = (Thread) param.thisObject;
         Log.i(TAG, "thread:" + t + ", exit..");
     }
-}
+}*/

@@ -14,8 +14,10 @@ import java.util.Map;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class NewsPtr extends MvpPresenter<NewsFragment, NewsEven, NewsModle> {
 
@@ -69,7 +71,12 @@ public class NewsPtr extends MvpPresenter<NewsFragment, NewsEven, NewsModle> {
                     observer.onError(new RuntimeException(newsData.getMessage()));
                 }
             }
-        }.compose(RxUtils.schedulersTransformer()).subscribe(new Consumer<BaseDataList>() {
+        }.onErrorResumeNext(new Function<Throwable, ObservableSource<? extends BaseDataList>>() {
+            @Override
+            public ObservableSource<? extends BaseDataList> apply(Throwable throwable) throws Exception {
+                return null;
+            }
+        }).compose(RxUtils.schedulersTransformer()).subscribe(new Consumer<BaseDataList>() {
             @Override
             public void accept(BaseDataList baseDataList) throws Exception {
                 updateNewsData.setValue(baseDataList);

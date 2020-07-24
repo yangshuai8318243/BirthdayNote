@@ -1,5 +1,7 @@
 package com.birthdaynote.app;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
@@ -15,7 +17,11 @@ import com.sankuai.waimai.router.core.Debugger;
 import com.sankuai.waimai.router.core.OnCompleteListener;
 import com.sankuai.waimai.router.core.UriRequest;
 
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class BirthdayApp extends BaseApp {
     private AppHander<BirthdayApp> safetyHander;
@@ -74,6 +80,8 @@ public class BirthdayApp extends BaseApp {
 //            }
 
         }
+        ReferenceQueue<String> stringReferenceQueue = new ReferenceQueue<>();
+        WeakReference<String> stringWeakReference = new WeakReference<>("", stringReferenceQueue);
 
         //插件初始化
 //        PluginManager.getInstance(this).init();

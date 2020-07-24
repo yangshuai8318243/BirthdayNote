@@ -6,10 +6,10 @@ if(isBuildModule.toBoolean()){
 }else{
     apply plugin: 'com.android.library'
 }
-apply plugin: 'com.didichuxing.tools.droidassist'
-droidAssistOptions {
-    config file("droidassist.xml") //插件配置文件(必选配置,支持多配置文件)
-}
+//apply plugin: 'com.didichuxing.tools.droidassist'
+//droidAssistOptions {
+//    config file("droidassist.xml") //插件配置文件(必选配置,支持多配置文件)
+//}
 
 //apply plugin: 'com.didi.virtualapk.plugin'
 
@@ -72,7 +72,7 @@ dependencies {
     //切片编程
 //    api 'org.aspectj:aspectjrt:1.9.5'
     //ART 切片编程插入方法
-    api 'me.weishu:epic:0.6.0'
+//    api 'me.weishu:epic:0.6.0'
 
     api project(':library')
 }

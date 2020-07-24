@@ -22,6 +22,17 @@ public class SingleLinkedList {
         head = preNode;
     }
 
+    void fanzhuan(Node node) {
+        Node head = node;
+        Node next = null;
+        while (head != null) {
+            Node next1 = head.next;
+            head.next = next;
+            next = head;
+            head = next1;
+        }
+
+    }
 
     /**
      * 链表添加结点:

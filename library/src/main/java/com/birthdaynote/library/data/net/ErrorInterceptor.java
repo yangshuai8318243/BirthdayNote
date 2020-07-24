@@ -2,6 +2,8 @@ package com.birthdaynote.library.data.net;
 
 import android.util.Log;
 
+import com.birthdaynote.library.util.PrintUtils;
+
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -21,6 +23,7 @@ public class ErrorInterceptor implements Interceptor {
         Request request = chain.request();
         Response proceed = chain.proceed(request);
         Log.e("ErrorInterceptor", "---------ErrorInterceptor-----------");
+        PrintUtils.printStackTrace("ErrorInterceptor");
         if (proceed.code() == 200) {
             return proceed;
         } else {

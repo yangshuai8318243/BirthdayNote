@@ -145,6 +145,29 @@ public class TreeAlgorithm extends AlgorithmBaseFragment {
         return maxWidth;
     }
 
+    public static int maxTerrWith(TreeNode treeNode) {
+        if (treeNode == null) return 0;
+        ArrayDeque<TreeNode> deque = new ArrayDeque<>();
+        deque.add(treeNode);
+        int max = 0;
+        while (true) {
+            int size = deque.size();
+            if (size == 0) break;
+            while (size > 0) {
+                TreeNode poll = deque.poll();
+                size--;
+                if (poll.leftChild != null) {
+                    deque.add(poll.leftChild);
+                }
+                if (poll.rightChild != null) {
+                    deque.add(poll.rightChild);
+                }
+            }
+
+            max = Math.max(max, deque.size());
+        }
+        return max;
+    }
 
     /**
      * 找到一条树的路径为指定值的和

@@ -3,6 +3,8 @@ package com.example.algorithm;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
 
@@ -22,7 +24,9 @@ import com.example.algorithm.algorithm.str.Str100W;
 import com.example.algorithm.algorithm.thread.ShunXuThread;
 import com.example.algorithm.algorithm.tree.TreeAlgorithm;
 import com.example.algorithm.designPatterns.ProducerConsumer;
+import com.example.algorithm.rx.TestRx;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,6 +42,7 @@ public class MainActivity extends MvpViewActivity {
             new NameData("打印数字", TestPower.class.getName()),
             new NameData("线程算法", ShunXuThread.class.getName()),
             new NameData("生产者消费者", ProducerConsumer.class.getName()),
+            new NameData("Rx测试", TestRx.class.getName()),
 //            new NameData("ImageFragment", ImagFragment.class.getName()),
     };
 
@@ -73,7 +78,8 @@ public class MainActivity extends MvpViewActivity {
         });
         int pid = android.os.Process.myPid();
         Log.e(TAG,"-------1111--------------->" + pid);
-
+        new Handler();
+        HandlerThread;
     }
 
 
