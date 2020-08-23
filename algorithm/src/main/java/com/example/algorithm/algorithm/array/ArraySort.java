@@ -205,7 +205,7 @@ public class ArraySort extends AlgorithmBaseFragment {
             } else if (ints[one] == 2) {
                 swap(ints, --two, one);
             } else {
-                ++one;
+                one++;
             }
         }
     }

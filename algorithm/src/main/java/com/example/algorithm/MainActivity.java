@@ -79,7 +79,6 @@ public class MainActivity extends MvpViewActivity {
         int pid = android.os.Process.myPid();
         Log.e(TAG,"-------1111--------------->" + pid);
         new Handler();
-        HandlerThread;
     }
 
 

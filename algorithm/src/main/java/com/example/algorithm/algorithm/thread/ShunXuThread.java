@@ -25,7 +25,8 @@ public class ShunXuThread extends AlgorithmBaseFragment {
     protected void run() {
 //        fun1();
 //        fun2();
-//        fun3();
+        fun3();
+        ThreadLocal threadLocal = new ThreadLocal();
         fun4();
 //        Hashtable<String,String>  hashtable = new Hashtable<>();
 //        hashtable.put("","");
