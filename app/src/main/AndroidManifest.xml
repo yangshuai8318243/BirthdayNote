@@ -22,6 +22,10 @@
 
         </activity>
 
+        <activity android:name=".module.birthday.show.ShowEdActivity">
+
+        </activity>
+
         <service
             android:name=".module.service.AIDLService"
             android:enabled="true"

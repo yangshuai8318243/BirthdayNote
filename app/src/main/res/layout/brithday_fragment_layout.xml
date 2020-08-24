@@ -10,4 +10,9 @@
         android:text="brithday"
         android:textSize="30sp" />
 
+    <Button
+        android:id="@+id/to_show_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳转展示页面"/>
 </RelativeLayout>

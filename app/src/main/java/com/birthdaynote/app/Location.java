@@ -22,8 +22,9 @@ public class Location {
         LocationManager systemService = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         LocationListener locationListener = new LocationListener() {
-//            private StringBuilder stringBuilder = new StringBuilder();
+            //            private StringBuilder stringBuilder = new StringBuilder();
             private LocationData localData = new LocationData();
+
             @Override
             public void onLocationChanged(android.location.Location location) {
 
@@ -33,6 +34,9 @@ public class Location {
                     locationList = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+                if (locationList == null) {
+                    return;
                 }
                 Address address = locationList.get(0);//得到Address实例
 

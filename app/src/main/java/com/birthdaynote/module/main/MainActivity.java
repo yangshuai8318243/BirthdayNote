@@ -20,10 +20,14 @@ public class MainActivity extends BDActivity {
     }
 
     @Override
+    protected int getActivityViewId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MainActivity","---MainActivity------------onCreate-------------->");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         addFragment(MainFragment.class,R.id.main_container);
     }
 

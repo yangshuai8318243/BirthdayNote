@@ -7,24 +7,29 @@ import com.birthdaynote.library.mvp.even.EvenInterface;
 import com.birthdaynote.library.mvp.MvpViewActivity;
 import com.birthdaynote.library.mvp.PresenterInterface;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
+
 import butterknife.Unbinder;
 
-public abstract class BDActivity<P extends PresenterInterface,E extends EvenInterface> extends MvpViewActivity<P,E> {
+public abstract class BDActivity<P extends PresenterInterface, E extends EvenInterface> extends MvpViewActivity<P, E> {
 
     protected Unbinder mUnbinder;
 
     protected abstract Unbinder binderView();
 
+    protected abstract @LayoutRes int getActivityViewId();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(getActivityViewId());
         mUnbinder = binderView();
     }
 
     @Override
     protected void onDestroy() {
-        if (mUnbinder!=null){
+        if (mUnbinder != null) {
             mUnbinder.unbind();
         }
         super.onDestroy();
