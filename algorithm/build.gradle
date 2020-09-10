@@ -42,5 +42,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //    Android room框架
+    def room_version = "2.1.0-alpha03"
+
+    annotationProcessor "androidx.room:room-compiler:$room_version" // use kapt for Kotlin
+
     implementation project(':library')
 }

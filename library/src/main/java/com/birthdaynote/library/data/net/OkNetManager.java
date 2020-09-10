@@ -5,6 +5,7 @@ import android.util.Log;
 import com.birthdaynote.library.data.entity.DecorationData;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -65,6 +66,15 @@ public class OkNetManager implements NetworkDataManager {
     @Override
     public <R> R postRequest(Class<R> rClass, String requestUrl, Map<String, String> param) throws Throwable {
         return request(rClass, requestUrl, param);
+    }
+
+    @Override
+    public byte[] getRequest(String requestUrl) throws IOException, DecorationData, Throwable {
+        Request request = buildReques(requestUrl, null);
+        Call call = mOkHttpClient.newCall(request);
+        Response execute = call.execute();
+        byte[] bytes = execute.body().bytes();
+        return bytes;
     }
 
 

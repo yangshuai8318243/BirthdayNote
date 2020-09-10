@@ -77,5 +77,11 @@ public abstract class DataManager {
         void onData(DecorationData d);
     }
 
+    public LocalDataManager getmLocalDataManager() {
+        return mLocalDataManager;
+    }
 
+    public NetworkDataManager getmNetworkDataManager() {
+        return mNetworkDataManager;
+    }
 }

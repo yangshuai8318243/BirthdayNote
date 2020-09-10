@@ -43,7 +43,6 @@ public class ViewUtils {
         atyDisplayMetrics.scaledDensity = targetScaleDensity;
         atyDisplayMetrics.densityDpi = targetDensityDpi;
 
-
     }
 
 }

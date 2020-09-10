@@ -6,10 +6,17 @@ import android.os.Message;
 import android.util.Log;
 
 import com.birthdaynote.BuildConfig;
+import com.birthdaynote.data.SingleDataManager;
 import com.birthdaynote.library.app.AppHander;
 import com.birthdaynote.library.app.BaseApp;
+import com.birthdaynote.library.data.DataManager;
 import com.birthdaynote.library.util.Utils;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.producers.Consumer;
+import com.facebook.imagepipeline.producers.FetchState;
+import com.facebook.imagepipeline.producers.NetworkFetcher;
+import com.facebook.imagepipeline.producers.ProducerContext;
 import com.sankuai.waimai.router.Router;
 import com.sankuai.waimai.router.common.DefaultRootUriHandler;
 import com.sankuai.waimai.router.components.DefaultLogger;
@@ -17,8 +24,11 @@ import com.sankuai.waimai.router.core.Debugger;
 import com.sankuai.waimai.router.core.OnCompleteListener;
 import com.sankuai.waimai.router.core.UriRequest;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +57,44 @@ public class BirthdayApp extends BaseApp {
         Log.i(TAG, "---BirthdayApp------------onCreate-------------->");
         new Test().fun1("--BirthdayApp-");
 //        图片加载配置
-        Fresco.initialize(this);
+        ImagePipelineConfig pipelineConfig = ImagePipelineConfig.newBuilder(this)
+                .setNetworkFetcher(new NetworkFetcher() {
+                    @Override
+                    public FetchState createFetchState(Consumer consumer, ProducerContext producerContext) {
+                        return new FetchState(consumer, producerContext);
+                    }
+
+                    @Override
+                    public void fetch(FetchState fetchState, Callback callback) {
+                        String toString = fetchState.getUri().toString();
+                        Log.i(TAG, "---BirthdayApp------------NetworkFetcher------getUri-------->" + toString);
+                        Log.i(TAG, "---BirthdayApp------------NetworkFetcher------thrad-------->" + Thread.currentThread().getName());
+                        try {
+                            byte[] request = SingleDataManager.getDataManager().getmNetworkDataManager().getRequest(toString);
+                            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(request);
+                            callback.onResponse(byteArrayInputStream, -1);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                            callback.onFailure(throwable);
+                        }
+                    }
+
+                    @Override
+                    public boolean shouldPropagate(FetchState fetchState) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onFetchCompletion(FetchState fetchState, int byteSize) {
+
+                    }
+
+                    @Override
+                    public Map<String, String> getExtraMap(FetchState fetchState, int byteSize) {
+                        return null;
+                    }
+                }).build();
+        Fresco.initialize(this, pipelineConfig);
 //        路由配置
         DefaultRootUriHandler defaultRootUriHandler = new DefaultRootUriHandler(this);
         defaultRootUriHandler.setGlobalOnCompleteListener(new OnCompleteListener() {

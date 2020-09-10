@@ -16,8 +16,9 @@ public interface NetworkDataManager {
      */
     <R> R getRequest(Class<R> rClass, String requestUrl) throws IOException, DecorationData, Throwable;
 
+    byte[] getRequest(String requestUrl) throws IOException, DecorationData, Throwable;
+
     /**
-     *
      * @param rClass
      * @param requestUrl
      * @param param
@@ -25,7 +26,7 @@ public interface NetworkDataManager {
      * @param <R>
      * @return
      */
-    <R> R postRequest(Class<R> rClass, String requestUrl, Map<String,String> param) throws IOException, DecorationData, Throwable;
+    <R> R postRequest(Class<R> rClass, String requestUrl, Map<String, String> param) throws IOException, DecorationData, Throwable;
 
 
 }
