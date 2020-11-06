@@ -56,7 +56,6 @@ public class PrintUtils {
             Log.i(TAG, "----------------printStackTrace---------------------------1");
             throw new NullPointerException();
         } catch (NullPointerException e1) {
-            // TODO: handle exception
             Log.i(TAG, "---------------printStackTrace-----------------");
             Log.e(TAG, Log.getStackTraceString(e1));
         }

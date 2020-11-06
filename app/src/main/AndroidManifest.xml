@@ -22,9 +22,7 @@
 
         </activity>
 
-        <activity android:name=".module.birthday.show.ShowEdActivity">
-
-        </activity>
+        <activity android:name=".module.birthday.input.InPutBirthdayActivity" />
 
         <service
             android:name=".module.service.AIDLService"

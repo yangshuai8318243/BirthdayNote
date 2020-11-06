@@ -3,9 +3,10 @@ package com.birthdaynote.library.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.birthdaynote.library.app.AppHander;
 
-import androidx.annotation.NonNull;
 
 public class Utils {
 
@@ -40,5 +41,9 @@ public class Utils {
 
     public static <T> AppHander<T> getSafetyHander(T t) {
         return new AppHander<T>(t);
+    }
+
+    public static boolean isNoll(Object o) {
+        return o == null;
     }
 }

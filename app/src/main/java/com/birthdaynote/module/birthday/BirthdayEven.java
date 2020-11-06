@@ -4,6 +4,8 @@ import com.birthdaynote.library.data.entity.BaseData;
 import com.birthdaynote.library.mvp.even.EvenInterface;
 
 public class BirthdayEven implements EvenInterface<BaseData> {
+    public static final String INPUT_BIRTHDAY_SAVE = "INPUT_BIRTHDAY_SAVE";
+
     @Override
     public String getTag() {
         return null;

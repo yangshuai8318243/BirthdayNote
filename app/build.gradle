@@ -58,6 +58,9 @@ dependencies {
     implementation 'com.facebook.fresco:animated-gif:0.12.0'
     annotationProcessor 'com.sankuai.waimai.router:compiler:1.2.0'
 
+    //弹框相关库
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 //    内存检测
 //    kt版本
     debugImplementation('com.squareup.leakcanary:leakcanary-android:2.2') {

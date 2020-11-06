@@ -1,24 +1,49 @@
 package com.birthdaynote.library.util;
 
 import android.app.Application;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import androidx.core.content.FileProvider;
 
+
+import com.birthdaynote.library.app.BaseApp;
 import com.birthdaynote.library.log.AppLog;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 
 public class FileUtil {
+    private static final String TAG = "FileUtil";
+    private static final int BUFFER_SIZE = 1024;
+
     // 用于获取APP的所在包目录
     public static String s_packageName;
     //来获得当前应用程序对应的apk文件的路径
@@ -27,13 +52,35 @@ public class FileUtil {
     public static String s_packageResourcePath;
     // 获得根目录/data
     public static String s_DataDirectory = Environment.getDataDirectory().getPath();
-
     //获得缓存目录/cache
     public static String s_DownloadCacheDirectory = Environment.getDownloadCacheDirectory().getPath();
     //获得SD卡目录/mnt/sdcard
     public static String s_ExternalStorageDirectory = Environment.getExternalStorageDirectory().getPath();
     // 获得系统目录/system
     public static String s_RootDirectoryy = Environment.getRootDirectory().getPath();
+    // 缓存路径
+    public static String s_CacheDirPath;
+
+    public static String s_ExternalCacheDir;
+
+    /**
+     * 获取系统URI
+     *
+     * @param authorites
+     * @param filePath
+     * @return
+     */
+    public static Uri getFileUri(String filePath, String authorites) {
+        Uri uri = null;
+        File file = new File(filePath);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //第二个参数为 包名.fileprovider
+            uri = FileProvider.getUriForFile(BaseApp.getInstance(), authorites, file);
+        } else {
+            uri = Uri.fromFile(file);
+        }
+        return uri;
+    }
 
 
     /**
@@ -44,7 +91,9 @@ public class FileUtil {
     public static void init(Application application) {
         s_packageName = application.getPackageName();
         s_packageCodePath = application.getPackageCodePath();
+        s_CacheDirPath = application.getCacheDir().getPath();
         s_packageResourcePath = application.getPackageResourcePath();
+        s_ExternalCacheDir = application.getExternalCacheDir().getPath();
     }
 
 
@@ -60,7 +109,7 @@ public class FileUtil {
      * @return boolean, true表示存在，false表示不存在
      */
     public static boolean isFileExist(String fileName) {
-        File file = new File("绝对路径" + fileName);
+        File file = new File(fileName);
         return file.exists();
     }
 
@@ -105,7 +154,98 @@ public class FileUtil {
      */
     public static boolean deleteFile(String path, String fileName) {
         File file = new File(path + File.separator + fileName);
-        return file.exists() && file.delete();
+        return file.delete();
+    }
+
+    /**
+     * 删除文件，可以是文件或文件夹
+     *
+     * @param delFile 要删除的文件夹或文件名
+     * @return 删除成功返回true，否则返回false
+     */
+    public static boolean delete(String delFile) {
+        File file = new File(delFile);
+        if (!file.exists()) {
+//            Toast.makeText(HnUiUtils.getContext(), "删除文件失败:" + delFile + "不存在！", Toast.LENGTH_SHORT).show();
+            AppLog.e("删除文件失败:" + delFile + "不存在！");
+            return false;
+        } else {
+            if (file.isFile())
+                return deleteSingleFile(delFile);
+            else
+                return deleteDirectory(delFile);
+        }
+    }
+
+    /**
+     * 删除单个文件
+     *
+     * @param filePath$Name 要删除的文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public static boolean deleteSingleFile(String filePath$Name) {
+        File file = new File(filePath$Name);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                AppLog.e("--Method--", "Copy_Delete.deleteSingleFile: 删除单个文件" + filePath$Name + "成功！");
+                return true;
+            } else {
+                AppLog.e("删除单个文件" + filePath$Name + "失败！");
+                return false;
+            }
+        } else {
+            AppLog.e("删除单个文件失败：" + filePath$Name + "不存在！");
+            return false;
+        }
+    }
+
+    /**
+     * 删除目录及目录下的文件
+     *
+     * @param filePath 要删除的目录的文件路径
+     * @return 目录删除成功返回true，否则返回false
+     */
+    public static boolean deleteDirectory(String filePath) {
+        // 如果dir不以文件分隔符结尾，自动添加文件分隔符
+        if (!filePath.endsWith(File.separator))
+            filePath = filePath + File.separator;
+        File dirFile = new File(filePath);
+        // 如果dir对应的文件不存在，或者不是一个目录，则退出
+        if ((!dirFile.exists()) || (!dirFile.isDirectory())) {
+            AppLog.e("删除目录失败：" + filePath + "不存在！");
+            return false;
+        }
+        boolean flag = true;
+        // 删除文件夹中的所有文件包括子目录
+        File[] files = dirFile.listFiles();
+        for (File file : files) {
+            // 删除子文件
+            if (file.isFile()) {
+                flag = deleteSingleFile(file.getAbsolutePath());
+                if (!flag)
+                    break;
+            }
+            // 删除子目录
+            else if (file.isDirectory()) {
+                flag = deleteDirectory(file
+                        .getAbsolutePath());
+                if (!flag)
+                    break;
+            }
+        }
+        if (!flag) {
+            AppLog.e("删除目录失败！");
+            return false;
+        }
+        // 删除当前目录
+        if (dirFile.delete()) {
+            AppLog.e("--Method--", "Copy_Delete.deleteDirectory: 删除目录" + filePath + "成功！");
+            return true;
+        } else {
+            AppLog.e("删除目录：" + filePath + "失败！");
+            return false;
+        }
     }
 
     /**
@@ -136,6 +276,7 @@ public class FileUtil {
      * @param isAppend true从尾部写入，false从头覆盖写入
      */
     public static void writeFile(String text, String fileStr, boolean isAppend) {
+        FileOutputStream f = null;
         try {
             File file = new File(fileStr);
             File parentFile = file.getParentFile();
@@ -145,11 +286,31 @@ public class FileUtil {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            FileOutputStream f = new FileOutputStream(fileStr, isAppend);
+            f = new FileOutputStream(fileStr, isAppend);
             f.write(text.getBytes());
-            f.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            closeOutput(f);
+        }
+    }
+
+    public static void closeOutput(OutputStream fileOutputStream) {
+        try {
+            if (fileOutputStream != null) {
+                fileOutputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void closeInput(InputStream fileInputStream) {
+        try {
+            if (fileInputStream != null) {
+                fileInputStream.close();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -157,11 +318,12 @@ public class FileUtil {
     /**
      * 拷贝文件
      *
-     * @param srcPath 绝对路径
-     * @param destDir 目标文件所在目录
+     * @param srcPath     绝对路径
+     * @param destDir     目标文件所在目录
+     * @param newFileName 目标文件名
      * @return boolean true拷贝成功
      */
-    public static boolean copyFile(String srcPath, String destDir) {
+    public static boolean copyFile(String srcPath, String destDir, String newFileName) {
         boolean flag = false;
         File srcFile = new File(srcPath); // 源文件
         if (!srcFile.exists()) {
@@ -169,8 +331,7 @@ public class FileUtil {
             return false;
         }
         // 获取待复制文件的文件名
-        String fileName = srcPath.substring(srcPath.lastIndexOf(File.separator));
-        String destPath = destDir + fileName;
+        String destPath = destDir + File.separator + newFileName;
         if (destPath.equals(srcPath)) {
             AppLog.i("FileUtils is copyFile：", "源文件路径和目标文件路径重复");
             return false;
@@ -182,19 +343,48 @@ public class FileUtil {
         }
         File destFileDir = new File(destDir);
         destFileDir.mkdirs();
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
         try {
-            FileInputStream fis = new FileInputStream(srcPath);
-            FileOutputStream fos = new FileOutputStream(destFile);
+            fis = new FileInputStream(srcPath);
+            fos = new FileOutputStream(destFile);
             byte[] buf = new byte[1024];
             int c;
             while ((c = fis.read(buf)) != -1) {
                 fos.write(buf, 0, c);
             }
-            fis.close();
-            fos.close();
+
             flag = true;
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            closeInput(fis);
+            closeOutput(fos);
+        }
+        return flag;
+    }
+
+
+    public static boolean copyFile(InputStream inputStream, String destPath) {
+        // 获取待复制文件的文件名
+        File file = new File(destPath);
+
+        boolean flag = false;
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int c;
+            while ((c = inputStream.read(buf)) != -1) {
+                fos.write(buf, 0, c);
+            }
+
+            flag = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeInput(inputStream);
+            closeOutput(fos);
         }
         return flag;
     }
@@ -227,6 +417,7 @@ public class FileUtil {
         File file = new File(path);
         return file.length();
     }
+
 
     /**
      * 计算某个文件夹的大小
@@ -329,6 +520,100 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 常用文件的文件头如下：(以前六位为准)
+     * JPEG (jpg)，文件头：FFD8FF
+     * PNG (png)，文件头：89504E47
+     * GIF (gif)，文件头：47494638
+     * TIFF (tif)，文件头：49492A00
+     * Windows Bitmap (bmp)，文件头：424D
+     * CAD (dwg)，文件头：41433130
+     * Adobe Photoshop (psd)，文件头：38425053
+     * Rich Text Format (rtf)，文件头：7B5C727466
+     * XML (xml)，文件头：3C3F786D6C
+     * HTML (html)，文件头：68746D6C3E
+     * Email [thorough only] (eml)，文件头：44656C69766572792D646174653A
+     * Outlook Express (dbx)，文件头：CFAD12FEC5FD746F
+     * Outlook (pst)，文件头：2142444E
+     * MS Word/Excel (xls.or.doc)，文件头：D0CF11E0
+     * MS Access (mdb)，文件头：5374616E64617264204A
+     * WordPerfect (wpd)，文件头：FF575043
+     * Postscript (eps.or.ps)，文件头：252150532D41646F6265
+     * Adobe Acrobat (pdf)，文件头：255044462D312E
+     * Quicken (qdf)，文件头：AC9EBD8F
+     * Windows Password (pwl)，文件头：E3828596
+     * ZIP Archive (zip)，文件头：504B0304
+     * RAR Archive (rar)，文件头：52617221
+     * Wave (wav)，文件头：57415645
+     * AVI (avi)，文件头：41564920
+     * Real Audio (ram)，文件头：2E7261FD
+     * Real Media (rm)，文件头：2E524D46
+     * MPEG (mpg)，文件头：000001BA
+     * MPEG (mpg)，文件头：000001B3
+     * Quicktime (mov)，文件头：6D6F6F76
+     * Windows Media (asf)，文件头：3026B2758E66CF11
+     * MIDI (mid)，文件头：4D546864
+     */
+    public static String checkType(String strType) {
+        switch (strType) {
+            case "FFD8FF":
+                return FILE_SUFFIX_JPG;
+            case "89504E":
+                return FILE_SUFFIX_PNG;
+            case "474946":
+                return FILE_SUFFIX_GIF;
+            case "49492A00":
+                return FILE_SUFFIX_TIF;
+            case "424D":
+                return FILE_SUFFIX_BMP;
+            case "232141":
+                return FILE_SUFFIX_AMR;
+            default:
+                return "";
+        }
+    }
+
+    public static final String FILE_SUFFIX_JPG = "jpg";
+    public static final String FILE_SUFFIX_PNG = "png";
+    public static final String FILE_SUFFIX_GIF = "gif";
+    public static final String FILE_SUFFIX_AMR = "amr";
+    public static final String FILE_SUFFIX_TIF = "tif";
+    public static final String FILE_SUFFIX_BMP = "bmp";
+
+    /**
+     * 获取文件类型后缀
+     *
+     * @param file 文件
+     * @return 后缀
+     */
+    public static String getFileTypeSuffix(File file) {
+        String fileTypeStr = getFileTypeStr(file);
+        return checkType(fileTypeStr);
+    }
+
+    /**
+     * 通过二进制判断文件类型
+     *
+     * @param file
+     * @return 返回文件类型字符
+     */
+    public static String getFileTypeStr(File file) {
+        String fielType = "";
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+            byte[] b = new byte[3];
+            fileInputStream.read(b, 0, b.length);
+            String toHexString = ByteUtil.byteArrToHexString(b);
+            fielType = toHexString.toUpperCase();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            closeInput(fileInputStream);
+            return fielType;
+        }
+    }
+
     public static boolean isImageFile(String url) {
         if (TextUtils.isEmpty(url)) {
             return false;
@@ -373,18 +658,262 @@ public class FileUtil {
             while (-1 != (len = in.read(buffer, 0, buf_size))) {
                 bos.write(buffer, 0, len);
             }
-            in.close();
             return bos.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
                 bos.close();
+                in.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return null;
+    }
+
+
+    /**
+     * 获取文件扩展名
+     *
+     * @param filename
+     * @return
+     */
+    public static String getExtensionName(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot > -1) && (dot < (filename.length() - 1))) {
+                return filename.substring(dot + 1);
+            }
+        }
+        return filename;
+    }
+
+    /**
+     * 获取文件去除扩展名后的名字
+     *
+     * @param filename
+     * @return
+     */
+    public static String getFileNameNoEx(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot > -1) && (dot < (filename.length()))) {
+                return filename.substring(0, dot);
+            }
+        }
+        return filename;
+    }
+
+    /**
+     * 获取文件MD5
+     *
+     * @param file
+     * @return
+     */
+    public static String getFileMD5(File file) {
+        if (!file.isFile()) {
+            return null;
+        }
+        MessageDigest digest = null;
+        FileInputStream in = null;
+        byte buffer[] = new byte[1024];
+        int len;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            in = new FileInputStream(file);
+            while ((len = in.read(buffer, 0, 1024)) != -1) {
+                digest.update(buffer, 0, len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            closeInput(in);
+        }
+        return ByteUtil.byteArrToHexString(digest.digest());
+    }
+
+    /**
+     * 读取文件转换成list
+     *
+     * @param fileName
+     * @return
+     */
+    public static List<String> getFileDataToList(String fileName) {
+        File srcFile = new File(fileName); // 源文件
+        if (!srcFile.exists()) {
+            AppLog.i("getFileDataToList：", "源文件不存在");
+            return null;
+        }
+        List<String> inputStreamToList = null;
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(fileName);
+            inputStreamToList = getInputStreamToList(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeInput(in);
+        }
+        return inputStreamToList;
+    }
+
+    public static List<String> getInputStreamToList(InputStream inputStream) {
+        if (inputStream == null) return null;
+
+        BufferedReader reader = null;
+        ArrayList<String> strings = new ArrayList<>();
+        try {
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                strings.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeInput(inputStream);
+            closeReader(reader);
+        }
+        return strings;
+    }
+
+    public static void closeReader(Reader reader) {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void closeReader(Writer writer) {
+        if (writer != null) {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    /**
+     * 通过系统uri获得图片文件路径
+     *
+     * @param uri
+     * @return
+     */
+    public static String getRealFilePath(final Uri uri) {
+
+        String[] projection = new String[]{
+                MediaStore.Images.Thumbnails._ID,
+                MediaStore.Images.Thumbnails.IMAGE_ID,
+                MediaStore.Images.Thumbnails.DATA
+        };
+//
+//
+        final Context context = BaseApp.getInstance();
+//        if (null == uri) return null;
+//        final String scheme = uri.getScheme();
+//        String data = null;
+//        if (scheme == null)
+//            data = uri.getPath();
+//        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+//            data = uri.getPath();
+//        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+//            Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+//            if (null != cursor) {
+//                if (cursor.moveToFirst()) {
+//                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+//                    if (index > -1) {
+//                        data = cursor.getString(index);
+//                    }
+//                }
+//                cursor.close();
+//            }
+//        }
+
+        String filePath;
+        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursor = contentResolver.query(uri, filePathColumn, null, null, null);
+//      也可用下面的方法拿到cursor
+//      Cursor cursor = this.context.managedQuery(selectedVideoUri, filePathColumn, null, null, null);
+
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
+    }
+
+    /**
+     * zip解压
+     *
+     * @param srcFile     zip源文件
+     * @param destDirPath 解压后的目标文件夹
+     * @throws RuntimeException 解压失败会抛出运行时异常
+     */
+    public static void unZip(File srcFile, String destDirPath) throws RuntimeException {
+        long start = System.currentTimeMillis();
+
+        // 判断源文件是否存在
+        if (!srcFile.exists()) {
+            throw new RuntimeException(srcFile.getPath() + "所指文件不存在");
+        }
+        // 开始解压
+        ZipFile zipFile = null;
+        try {
+            zipFile = new ZipFile(srcFile);
+            Enumeration<?> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                System.out.println("解压" + entry.getName());
+                // 如果是文件夹，就创建个文件夹
+                if (entry.isDirectory()) {
+                    String dirPath = destDirPath + "/" + entry.getName();
+                    File dir = new File(dirPath);
+                    dir.mkdirs();
+                } else {
+                    // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
+                    File targetFile = new File(destDirPath + "/" + entry.getName());
+                    // 保证这个文件的父文件夹必须要存在
+                    if (!targetFile.getParentFile().exists()) {
+                        targetFile.getParentFile().mkdirs();
+                    }
+                    targetFile.createNewFile();
+                    // 将压缩文件内容写入到这个文件中
+                    InputStream is = zipFile.getInputStream(entry);
+                    FileOutputStream fos = new FileOutputStream(targetFile);
+
+                    int len;
+                    byte[] buf = new byte[BUFFER_SIZE];
+                    while ((len = is.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                    }
+                    // 关流顺序，先打开的后关闭
+                    fos.close();
+                    is.close();
+                }
+            }
+            long end = System.currentTimeMillis();
+            AppLog.i(TAG, "解压完成，耗时：" + (end - start) + " ms");
+        } catch (Exception e) {
+            throw new RuntimeException("unzip error from ZipUtils", e);
+        } finally {
+            if (zipFile != null) {
+                try {
+                    zipFile.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
 }

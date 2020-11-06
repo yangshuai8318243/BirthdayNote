@@ -1,3 +1,6 @@
+include ':ChatSDKTest'
+include ':testaar'
+include ':unityTest'
 include ':app', ':library'
 include ':testmodule'
 include ':pluginapp'

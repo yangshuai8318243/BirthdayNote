@@ -4,18 +4,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.birthdaynote.R;
-import com.birthdaynote.app.BDFragment;
-import com.birthdaynote.module.birthday.show.ShowEdActivity;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.birthdaynote.R;
+import com.birthdaynote.app.BDFragment;
+import com.birthdaynote.module.birthday.input.InPutBirthdayActivity;
+import com.birthdaynote.uitls.LunarSolarConverter;
+
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class BirthdayFragment extends BDFragment<BirthdayPtr, BirthdayEven> {
 
+    @BindView(R.id.show_text)
+    TextView showText;
 
     @Override
     protected BirthdayPtr initPtr() {
@@ -32,6 +37,8 @@ public class BirthdayFragment extends BDFragment<BirthdayPtr, BirthdayEven> {
 
     @OnClick(R.id.to_show_bt)
     public void toShowView() {
-        startActivity(ShowEdActivity.class);
+        String today = LunarSolarConverter.today();
+        showText.setText(today);
+        startActivity(InPutBirthdayActivity.class);
     }
 }

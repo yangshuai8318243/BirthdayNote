@@ -5,8 +5,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
-public class TestViewGroup extends ViewGroup {
+public class TestViewGroup extends RelativeLayout {
+
     public TestViewGroup(Context context) {
         super(context);
     }
@@ -78,7 +80,7 @@ public class TestViewGroup extends ViewGroup {
             int maxWidth = childAtMeasuredWidth + paddingLeft + paddingRight;
 
 
-            if ((layoutWidth + maxWidth )< getWidth()) {
+            if ((layoutWidth + maxWidth) < getWidth()) {
                 l = layoutWidth;
                 r = l + maxWidth;
                 t = layoutHight;

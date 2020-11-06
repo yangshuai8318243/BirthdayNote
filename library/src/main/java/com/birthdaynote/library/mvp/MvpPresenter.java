@@ -4,6 +4,13 @@ package com.birthdaynote.library.mvp;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
+
+
 import com.birthdaynote.library.data.entity.MvpData;
 import com.birthdaynote.library.mvp.even.EvenConstants;
 import com.birthdaynote.library.mvp.even.EvenInterface;
@@ -11,13 +18,9 @@ import com.birthdaynote.library.mvp.even.EvenInterface;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.Observer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -27,6 +30,8 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
     protected M mModel;
     protected WeakReference<V> mView;
     private Map<String, LiveData> mLiveDataMap;
+    private Map<String, EvenChangeData> mEvenChangeDataMap;
+
     //管理RxJava，主要针对RxJava异步操作造成的内存泄漏
     private CompositeDisposable mCompositeDisposable;
     private MediatorLiveData<MvpData> mStartActivityLive;
@@ -39,9 +44,15 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
         this.mView = new WeakReference<>(view);
         this.mModel = bindModel();
         this.mLiveDataMap = addLiveData();
+        this.mEvenChangeDataMap = new HashMap<>();
         bindStarActivityEven();
         mCompositeDisposable = new CompositeDisposable();
+        init();
     }
+
+    protected void init() {
+    }
+
 
     @Override
     public void onSuccessPermissions(String permission) {
@@ -251,6 +262,10 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
         if (mCompositeDisposable != null) {
             mCompositeDisposable.clear();
         }
+
+        unBindRxEven();
+
+        unBindViewEvenAll();
     }
 
     @Override
@@ -288,6 +303,22 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
     @Override
     public void unBindRxEven() {
 
+    }
+
+    @Override
+    public <T> EvenChangeData<T> getBindViewEven(String tag) {
+        return mEvenChangeDataMap.get(tag);
+    }
+
+    @Override
+    public <T> void bindViewEven(String tag, EvenChangeData<T> evenChangeData) {
+        mEvenChangeDataMap.put(tag, evenChangeData);
+    }
+
+    @Override
+    public void unBindViewEvenAll() {
+        mEvenChangeDataMap.clear();
+        mEvenChangeDataMap = null;
     }
 
     /**

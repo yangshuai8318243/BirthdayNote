@@ -1,6 +1,5 @@
 package com.birthdaynote.module.main;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
@@ -9,7 +8,6 @@ import com.birthdaynote.R;
 import com.birthdaynote.app.BDActivity;
 import com.birthdaynote.library.mvp.PresenterInterface;
 
-import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 

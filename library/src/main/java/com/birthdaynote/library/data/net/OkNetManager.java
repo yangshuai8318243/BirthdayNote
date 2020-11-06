@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Dns;
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -25,6 +26,28 @@ public class OkNetManager implements NetworkDataManager {
 
     private OkHttpClient mOkHttpClient;
     private String mMediaType;
+
+    private OkNetManager() {
+    }
+
+    private static class SingletonHolder {
+        private static final OkNetManager OK_NET_MANAGER = new OkNetManager();
+    }
+
+    public static OkNetManager get() {
+        return SingletonHolder.OK_NET_MANAGER;
+    }
+
+    public void requestSyn(String requestUrl, Callback callback) {
+        Request request = buildReques(requestUrl, null);
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public void initOkClient(OkHttpClient okHttpClient) {
+        OkHttpClient build = okHttpClient.newBuilder().build();
+        this.mOkHttpClient = build;
+    }
 
     public OkNetManager(OkHttpClient mOkHttpClient, Headers mHeader, String mMediaType) {
         OkHttpClient build = mOkHttpClient.newBuilder()

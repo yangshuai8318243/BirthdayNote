@@ -11,13 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
+import java.lang.ref.WeakReference;
 
 public class ToastUtils {
 

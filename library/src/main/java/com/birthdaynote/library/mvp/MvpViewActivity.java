@@ -67,6 +67,10 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
 
     }
 
+    protected void bindLiveData(String tag, Observer observer) {
+        mPtr.bindViewLiveData(this, tag, observer);
+    }
+
     @Override
     public void onFailurePermissions(String permission) {
         super.onFailurePermissions(permission);

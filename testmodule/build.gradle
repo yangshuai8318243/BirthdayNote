@@ -61,6 +61,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    api 'cn.dreamtobe.kpswitch:library:1.6.1'
 
 //    美团动态路由
     annotationProcessor 'com.sankuai.waimai.router:compiler:1.2.0'

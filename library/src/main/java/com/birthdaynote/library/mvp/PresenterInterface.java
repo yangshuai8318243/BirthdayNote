@@ -1,14 +1,16 @@
 package com.birthdaynote.library.mvp;
 
 
-import com.birthdaynote.library.app.PermissionsListener;
-import com.birthdaynote.library.mvp.even.EvenInterface;
-
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.OnLifecycleEvent;
+
+
+import com.birthdaynote.library.app.PermissionsListener;
+import com.birthdaynote.library.mvp.even.EvenInterface;
+
 import io.reactivex.functions.Consumer;
 
 public interface PresenterInterface<E extends EvenInterface> extends LifecycleObserver, Consumer<E>, PermissionsListener {
@@ -37,5 +39,32 @@ public interface PresenterInterface<E extends EvenInterface> extends LifecycleOb
 
     void unBindRxEven();
 
+    /**
+     * 普通方式的v和p的通讯方式
+     *
+     * @param tag
+     * @param evenChangeData
+     * @param <T>
+     */
+    <T> void bindViewEven(String tag, EvenChangeData<T> evenChangeData);
+
+    /**
+     * 获取绑定的事件
+     *
+     * @param tag
+     * @param <T>
+     * @return
+     */
+    <T> EvenChangeData<T> getBindViewEven(String tag);
+
+    /**
+     * 普通通讯方式解绑
+     */
+    void unBindViewEvenAll();
+
     void bindViewLiveData(LifecycleOwner owner, String tag, Observer observer);
+
+    interface EvenChangeData<T> {
+        void setValue(T value);
+    }
 }

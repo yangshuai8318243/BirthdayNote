@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.unitytest.SlidingMenu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sliding="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fresco="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    sliding:rightPaddingSliding="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_b9a694">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/audio_cancel" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_Black_20">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/show_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                fresco:placeholderImage="@mipmap/photo_album_icon"
+                fresco:roundAsCircle="false" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.example.unitytest.SlidingMenu>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.birthdaynote.library.widget.slidingMenu.SlidingMenu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:rightPadding="400px">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.birthdaynote.library.widget.swipeRecyclerView.SwipeRecyclerView
+            android:id="@+id/swipe_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="内容" />
+        </LinearLayout>
+    </LinearLayout>
+
+</com.birthdaynote.library.widget.slidingMenu.SlidingMenu>

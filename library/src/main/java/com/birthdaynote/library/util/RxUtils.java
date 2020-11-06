@@ -1,9 +1,13 @@
 package com.birthdaynote.library.util;
 
+
+import com.birthdaynote.library.log.AppLog;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -21,6 +25,15 @@ public class RxUtils {
             public ObservableSource apply(Observable upstream) {
                 return upstream.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
+            }
+        };
+    }
+
+    public static Consumer<Throwable> commErrorConsumer() {
+        return new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                AppLog.e(throwable.getMessage());
             }
         };
     }

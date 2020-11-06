@@ -19,7 +19,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             // 混淆
             minifyEnabled false
 //            // Zipalign优化
@@ -32,7 +32,7 @@ android {
     }
 
 }
-
+repositories { flatDir { dirs 'libs' } }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -41,6 +41,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 
     //    Android room框架
     def room_version = "2.1.0-alpha03"
@@ -48,4 +49,8 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version" // use kapt for Kotlin
 
     implementation project(':library')
+//    implementation(name: 'chatMJlibrary-release', ext: 'aar')
+    implementation(name: 'unityTest-release', ext: 'aar')
+    
+
 }

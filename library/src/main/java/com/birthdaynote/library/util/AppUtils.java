@@ -4,20 +4,33 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.KeyguardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import static android.content.Context.KEYGUARD_SERVICE;
 
 public class AppUtils {
+
+    public static boolean isActivityRunning(Context mContext, String activityClassName) {
+        ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
+        if (info != null && info.size() > 0) {
+            ComponentName component = info.get(0).topActivity;
+            if (activityClassName.equals(component.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static void watchActivityLife(Application application) {
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
@@ -57,7 +70,7 @@ public class AppUtils {
             }
         });
 
-        WeakReference<String> stringWeakReference = new WeakReference<String>("new String()",new ReferenceQueue<String>());
+        WeakReference<String> stringWeakReference = new WeakReference<String>("new String()", new ReferenceQueue<String>());
     }
 
     public static boolean isBackground(Context context) {
