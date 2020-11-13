@@ -22,8 +22,6 @@ public class ErrorInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         Response proceed = chain.proceed(request);
-        Log.e("ErrorInterceptor", "---------ErrorInterceptor-----------");
-        PrintUtils.printStackTrace("ErrorInterceptor");
         if (proceed.code() == 200) {
             return proceed;
         } else {

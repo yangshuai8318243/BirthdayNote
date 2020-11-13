@@ -34,6 +34,7 @@ import com.example.algorithm.file.FileDataTest;
 import com.example.algorithm.json.GosnTest;
 import com.example.algorithm.rx.TestRx;
 import com.example.algorithm.tablayout.TabLayoutActivity;
+import com.example.algorithm.view.OnTouchFragment;
 import com.example.unitytest.TestActivity;
 
 import java.util.Arrays;
@@ -57,6 +58,7 @@ public class MainActivity extends MvpViewActivity {
             new NameData("文件测试", FileDataTest.class.getName()),
             new NameData("json测试", GosnTest.class.getName()),
             new NameData("tab测试", TabLayoutActivity.class.getName()).setActivity(true),
+            new NameData("滑动冲突测试", OnTouchFragment.class.getName()),
 //            new NameData("ImageFragment", ImagFragment.class.getName()),
     };
 
@@ -128,7 +130,7 @@ public class MainActivity extends MvpViewActivity {
         return null;
     }
 
-    static class NameData {
+   public static class NameData {
         String name;
         String className;
         boolean isActivity;

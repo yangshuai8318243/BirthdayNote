@@ -28,7 +28,6 @@ public abstract class MvpViewActivity<P extends PresenterInterface, E extends Ev
         mBindLiveData = new BindLiveData();
         bindPtr();
         bindBaseEven();
-
     }
 
 

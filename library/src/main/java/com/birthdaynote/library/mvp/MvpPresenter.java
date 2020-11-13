@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer;
 
 
 import com.birthdaynote.library.data.entity.MvpData;
+import com.birthdaynote.library.log.AppLog;
 import com.birthdaynote.library.mvp.even.EvenConstants;
 import com.birthdaynote.library.mvp.even.EvenInterface;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -92,10 +94,15 @@ public abstract class MvpPresenter<V extends ViewInterface, E extends EvenInterf
      */
     @Override
     public void bindViewLiveData(LifecycleOwner owner, String tag, Observer observer) {
-//        Log.e(TAG, "----------bindViewLiveData------>" + tag);
+        AppLog.e(TAG, "----------bindViewLiveData------>" + tag);
 
         checkLiveDataMap();
         LiveData liveData = mLiveDataMap.get(tag);
+
+        Set<String> strings = mLiveDataMap.keySet();
+        for (String key : strings) {
+            AppLog.e(TAG, "------bindViewLiveData----1111------>", key);
+        }
         if (liveData == null) {
             throw new RuntimeException("Please confirm if LiveData was created");
         } else {

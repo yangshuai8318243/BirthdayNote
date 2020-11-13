@@ -127,8 +127,6 @@ public class BirthdayApp extends BaseApp {
 //            }
 
         }
-        ReferenceQueue<String> stringReferenceQueue = new ReferenceQueue<>();
-        WeakReference<String> stringWeakReference = new WeakReference<>("", stringReferenceQueue);
 
         //插件初始化
 //        PluginManager.getInstance(this).init();

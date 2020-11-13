@@ -22,7 +22,7 @@ public class BaseApp extends Application {
         super.onCreate();
         setApplication(this);
         Utils.init(this);
-        new ANRWatchDog().start();
+//        new ANRWatchDog().start();
         BlockCanary.install(this, new AppBlockCanaryContext()).start();
     }
 

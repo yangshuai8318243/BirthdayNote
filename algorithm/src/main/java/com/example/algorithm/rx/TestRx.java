@@ -2,6 +2,7 @@ package com.example.algorithm.rx;
 
 import android.util.Log;
 
+import com.birthdaynote.library.log.AppLog;
 import com.example.algorithm.AlgorithmBaseFragment;
 
 import java.util.concurrent.Callable;
@@ -10,15 +11,45 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 public class TestRx extends AlgorithmBaseFragment {
+    private int dataIndex = 0;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
+    interface TestInterface {
+        void test(String data);
+    }
 
     @Override
     protected void run() {
-        testMap();
+//        testMap();
+        testDes(new TestInterface() {
+            @Override
+            public void test(String data) {
+                AppLog.e(TAG, "---------->", data);
+            }
+        });
+    }
+
+    private void testDes(final TestInterface testInterface) {
+        Disposable subscribe = new Observable<String>() {
+            @Override
+            protected void subscribeActual(Observer<? super String> observer) {
+                observer.onNext("测试数据：" + dataIndex);
+                dataIndex++;
+                observer.onComplete();
+            }
+        }.subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                testInterface.test(s);
+            }
+        });
+        mCompositeDisposable.add(subscribe);
     }
 
     public void testDefer() {
